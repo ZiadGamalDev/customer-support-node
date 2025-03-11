@@ -3,7 +3,6 @@ import AuthController from './auth.controller.js';
 import AuthValidation from './auth.validation.js';
 import validate from '../../middleware/validate.js';
 import authenticate from '../../middleware/authenticate.js';
-import verify from '../../middleware/verify.js';
 
 const authRoutes = Router();
 
