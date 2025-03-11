@@ -3,18 +3,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const silent = process.env.APP_DEBUG?.toLowerCase().trim() === "false";
+const isLocal = process.env.APP_ENV === "local";
+const isDebug = process.env.APP_DEBUG === "true";
+const logFile = "storage/logs/app.log";
 
 const logger = createLogger({
   level: "info",
-  silent,
+  silent: !isLocal || !isDebug,
   format: format.combine(
     format.timestamp(),
     format.printf(({ timestamp, level, message }) => `[${timestamp}] ${level.toUpperCase()}: ${message}`)
   ),
   transports: [
-    // new transports.File({ filename: "storage/logs/app.log" }),
-    new transports.Console(),
+    ...(isLocal && isDebug ? [new transports.File({ filename: logFile })] : [])
   ],
 });
 
