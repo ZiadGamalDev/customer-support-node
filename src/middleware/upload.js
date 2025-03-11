@@ -4,7 +4,8 @@ import fs from 'fs';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const folder = 'storage';
+        console.log('APP_HOST:', process.env.APP_HOST);
+        const folder = process.env.APP_HOST === 'vercel' ? '/tmp/storage' : 'storage';
         fs.mkdirSync(folder, { recursive: true });
         cb(null, folder);
     },
