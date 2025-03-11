@@ -28,7 +28,7 @@ class AuthService {
     }
 
     async sendWelcomeEmail(user) {
-        const emailTemplate = template('email', 'welcome.html');
+        const emailTemplate = template('email/welcome.html');
 
         await sendEmail(user.email, 'Welcome to our platform', emailTemplate);
     }
@@ -36,7 +36,7 @@ class AuthService {
     async sendVerificationEmail(user) {
         const emailToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EMAIL_EXPIRY });
         const verifyLink = `${process.env.APP_BASE_URL}/auth/verify/${emailToken}`;
-        const emailTemplate = template('email', 'verification.html').replace('{{verifyLink}}', verifyLink);
+        const emailTemplate = template('email/verification.html').replace('{{verifyLink}}', verifyLink);
         
         await sendEmail(user.email, 'Verify your email', emailTemplate);
     }

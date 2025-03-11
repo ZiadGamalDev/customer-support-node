@@ -9,6 +9,5 @@ app.use(cors());
 
 resourceRoutes(app);
 app.use('/storage', express.static('storage'));
-app.get('/test', (req, res) => { res.send('ok'); });
 
 export default app;
