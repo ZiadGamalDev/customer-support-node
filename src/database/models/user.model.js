@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
-import roleEnum from '../enums/role.enum.js';
+import { roles } from '../enums/user.enum.js';
 import ImageSchema from '../schemas/image.schema.js';
 
 const userSchema = new Schema({
     role: {
         type: String,
-        enum: Object.values(roleEnum),
-        default: 'user',
+        enum: Object.values(roles),
+        default: roles.USER,
     },
     name: {
         type: String,
