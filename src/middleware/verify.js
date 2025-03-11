@@ -3,13 +3,7 @@ import logger from '../utils/logger.js';
 
 const verify = (type = 'email') => async (req, res, next) => {
     try {
-        const value = req.body[type];
-
-        if (!value) {
-            return res.status(400).json({ message: `Missing ${type}` });
-        }
-
-        const user = await User.findOne({ [type]: value });
+        const user = req.user;
 
         if (!user) {
             return res.status(400).json({ message: 'User not found' });
