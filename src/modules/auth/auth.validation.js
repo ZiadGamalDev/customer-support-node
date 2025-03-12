@@ -53,7 +53,7 @@ class AuthValidation {
         if (error) return { error };
 
         // Check email exists
-        if (!await User.findOne({ email: body.email })) {
+        if (! await User.findOne({ email: body.email })) {
             return { error: { details: [{ message: 'Email does not exist' }] } };
         }
 
