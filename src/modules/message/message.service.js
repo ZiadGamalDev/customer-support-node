@@ -6,7 +6,7 @@ class MessageService {
     return await Message.find({ chatId }).sort({ createdAt: 1 });
   }
 
-  async send({ sender, receiver, message }) {
+  async send(sender, receiver, message) {
     let chat = await Chat.findOne({ participants: { $all: [sender, receiver] } });
 
     if (!chat) {
@@ -22,7 +22,7 @@ class MessageService {
     return newMessage;
   }
 
-  async update(messageId, status) {
+  async updateStatus(messageId, status) {
     return await Message.findByIdAndUpdate(messageId, { status }, { new: true });
   }
 }
