@@ -59,16 +59,6 @@ class AuthValidation {
 
         return {};
     }
-
-    async refresh({ headers }) {
-        const refreshToken = headers['x-refresh-token'];
-
-        if (!refreshToken) {
-            return { error: { details: [{ message: 'Refresh token is required' }] } };
-        }
-
-        return {};
-    }
 }
 
 export default new AuthValidation();

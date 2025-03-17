@@ -1,23 +1,24 @@
 import AuthService from './auth.service.js';
+import EmailService from '../email/email.service.js';
 import authResponse from './auth.response.js';
 
 class AuthController {
-    async register(req, res) {
+    async register(req, res, next) {
         try {
             const { name, email, password } = req.body;
             
             const user = await AuthService.create(name, email, password);
             const token = await AuthService.generateToken(user);
-            await AuthService.sendWelcomeEmail(user);
-            await AuthService.sendVerificationEmail(user);
+            await EmailService.sendWelcomeEmail(user);
+            await EmailService.sendVerificationEmail(user);
 
             return res.status(201).json(authResponse(user, token));
         } catch (err) {
-            res.status(500).json({ message: err.message || 'Internal server error' });
+            next(err);
         }
     }
 
-    async login(req, res) {
+    async login(req, res, next) {
         try {
             const { email, password } = req.body;
 
@@ -26,37 +27,15 @@ class AuthController {
 
             res.status(200).json(authResponse(user, token));
         } catch (err) {
-            res.status(400).json({ message: err.message || 'Invalid credentials' });
+            next(err);
         }
     }
 
-    async logout(req, res) {
+    async logout(req, res, next) {
         try {
             res.status(200).json({ message: 'Logged out successfully' });
         } catch (err) {
-            res.status(500).json({ message: err.message || 'Internal server error' });
-        }
-    }
-
-    async sendVerificationEmail(req, res) {
-        try {
-            await AuthService.sendVerificationEmail(req.user);
-            
-            res.status(200).json({ message: 'Verification email sent successfully' });
-        } catch (err) {
-            res.status(500).json({ message: err.message || 'Internal server error' });
-        }
-    }
-
-    async verifyEmail(req, res) {
-        try {
-            const { token } = req.params;
-            
-            await AuthService.verifyEmail(token);
-            
-            res.send('<h1>Email Verified Successfully</h1>');
-        } catch (err) {
-            res.status(400).send(`<h1>${err.message}</h1>`);
+            next(err);
         }
     }
 }
