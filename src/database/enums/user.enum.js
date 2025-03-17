@@ -1,4 +1,6 @@
 export const roles = Object.freeze({
+  USER: 'user', // default role
   ADMIN: 'admin',
-  USER: 'user',
+  CUSTOMER: 'customer',
+  AGENT: 'agent',
 });

@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../database/models/user.model.js';
+import { roles } from '../database/enums/user.enum.js';
 
-const authenticate = (role = 'user') => async (req, res, next) => {    
+const authenticate = (role = roles.USER) => async (req, res, next) => {    
     try {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {

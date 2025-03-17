@@ -4,8 +4,6 @@ import cloudinary from '../config/cloudinary.js';
 
 const file = {
     async store(file, targetFolder = 'common', useCloudinary = true, customName = null) {
-        console.log(`[file.store] useCloudinary: ${useCloudinary}`);
-
         if (useCloudinary) {
             try {
                 const result = await cloudinary.uploader.upload(file.path, { folder: targetFolder });

@@ -47,9 +47,21 @@ const userSchema = new Schema({
         expiry: {
             type: Date,
         },
-    }
+    },
+    deletedAt: {
+        type: Date,
+        default: null,
+    },
 }, {
     timestamps: true,
+});
+
+// Auto-exclude deleted users in all `find` queries (unless overridden)
+userSchema.pre(/^find/, function (next) {
+    if (!this.getFilter().includeDeleted) {
+        this.where({ deletedAt: null });
+    }
+    next();
 });
 
 const User = model('User', userSchema);
