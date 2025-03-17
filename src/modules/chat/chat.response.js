@@ -5,7 +5,7 @@ const chatResponse = (chat) => {
   return {
       id: chat._id,
       participants: chat.participants.map((user) => (userResponse(user))),
-      lastMessage: chat.lastMessage ? messageResponse(lastMessage) : null,
+      lastMessage: messageResponse(chat.lastMessage),
       unreadCount: chat.unreadCount,
       createdAt: chat.createdAt,
   };

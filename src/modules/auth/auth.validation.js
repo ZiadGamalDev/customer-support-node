@@ -53,18 +53,8 @@ class AuthValidation {
         if (error) return { error };
 
         // Check email exists
-        if (!await User.findOne({ email: body.email })) {
+        if (! await User.findOne({ email: body.email })) {
             return { error: { details: [{ message: 'Email does not exist' }] } };
-        }
-
-        return {};
-    }
-
-    async refresh({ headers }) {
-        const refreshToken = headers['x-refresh-token'];
-
-        if (!refreshToken) {
-            return { error: { details: [{ message: 'Refresh token is required' }] } };
         }
 
         return {};

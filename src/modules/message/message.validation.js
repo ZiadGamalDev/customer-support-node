@@ -1,27 +1,63 @@
 import Joi from 'joi';
+import Chat from '../../database/models/chat.model.js';
+import User from '../../database/models/user.model.js';
+import { statuses } from '../../database/enums/message.enum.js';
+import Message from '../../database/models/message.model.js';
+import { objectId } from '../../utils/validators.js';
 
 class MessageValidation {
-    send({ body }) {
+    async all({ params }) {
         const schema = Joi.object({
-            receiver: Joi.string().required().messages({ 'any.required': 'Receiver ID is required' }),
+            chatId: objectId.required().messages({ 'any.required': 'Chat ID is required' }),
+        });
+
+        const { error } = schema.validate(params, { abortEarly: false });
+        if (error) return { error };
+
+        // Check if chat exists
+        if (! await Chat.exists({ _id: params.chatId })) {
+            return { error: { details: [{ message: 'Chat not found' }] } };
+        }
+
+        return {};
+    }
+
+    async send({ body }) {
+        const schema = Joi.object({
+            receiver: objectId.required().messages({ 'any.required': 'Receiver ID is required' }),
             message: Joi.string().required().messages({ 'any.required': 'Message cannot be empty' }),
         });
 
         const { error } = schema.validate(body, { abortEarly: false });
         if (error) return { error };
+
+        // Check if receiver exists
+        if (! await User.exists({ _id: body.receiver })) {
+            return { error: { details: [{ message: 'Receiver not found' }] } };
+        }
+
         return {};
     }
 
-    update({ body }) {
+    async updateStatus({ params }) {
+        const validStatuses = Object.values(statuses);
+        
         const schema = Joi.object({
-            status: Joi.string().valid('delivered', 'seen').required().messages({
+            messageId: objectId.required().messages({ 'any.required': 'Message ID is required' }),
+            status: Joi.string().valid(...validStatuses).required().messages({
                 'any.required': 'Status is required',
-                'any.only': 'Status must be either "delivered" or "seen"',
+                'any.only': 'Status must be one of: ' + validStatuses.join(', '),
             }),
         });
 
-        const { error } = schema.validate(body, { abortEarly: false });
+        const { error } = schema.validate(params, { abortEarly: false });
         if (error) return { error };
+
+        // Check if message exists
+        if (! await Message.exists({ _id: params.messageId })) {
+            return { error: { details: [{ message: 'Message not found' }] } };
+        }
+
         return {};
     }
 }

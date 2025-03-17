@@ -40,6 +40,14 @@ const userSchema = new Schema({
     emailVerifiedAt: {
         type: Date,
     },
+    otp: {
+        code: {
+            type: String,
+        },
+        expiry: {
+            type: Date,
+        },
+    }
 }, {
     timestamps: true,
 });

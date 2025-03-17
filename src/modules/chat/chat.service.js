@@ -1,10 +1,9 @@
 import Chat from '../../database/models/chat.model.js';
-import Message from '../../database/models/message.model.js';
 
 class ChatService {
     async all(userId) {
         return await Chat.find({ participants: userId })
-            .populate('participants', 'name email image')
+            .populate('participants', 'id name email image')
             .populate('lastMessage');
     }
 
@@ -15,15 +14,19 @@ class ChatService {
             chat = await Chat.create({ participants: [sender, receiver] });
         }
 
-        return chat;
+        return await chat.populate([
+            { path: 'participants', select: 'id name email image' },
+            { path: 'lastMessage' }
+        ]);
     }
 
-    async updateLastMessage(chatId, messageId) {
-        return await Chat.findByIdAndUpdate(chatId, { lastMessage: messageId }, { new: true });
-    }
-
-    async resetUnreadCount(chatId, userId) {
-        return await Chat.findByIdAndUpdate(chatId, { $set: { [`unreadCount.${userId}`]: 0 } }, { new: true });
+    async resetUnreadCount(userId, chatId) {
+        return await Chat.findByIdAndUpdate(
+            chatId, 
+            { $set: { [`unreadCount.${userId}`]: 0 } }, 
+            { new: true }
+        ).populate('participants', 'id name email image')
+         .populate('lastMessage');
     }
 }
 

@@ -1,3 +1,5 @@
+import userResponse from "../user/user.response.js";
+
 const messageResponse = (message) => {
   return {
     id: message._id,

@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import ChatController from './chat.controller.js';
-import authenticate from '../../middleware/authenticate.js';
+import validate from '../../middleware/validate.js';
+import chatValidation from './chat.validation.js';
 
 const chatRoutes = Router();
 
-chatRoutes.get('/', authenticate(), ChatController.all);
-chatRoutes.post('/', authenticate(), ChatController.findOrCreate);
-chatRoutes.put('/:chatId/reset-unread', authenticate(), ChatController.resetUnreadCount);
+chatRoutes.get('/', ChatController.all);
+chatRoutes.post('/', validate(chatValidation.findOrCreate), ChatController.findOrCreate);
+chatRoutes.put('/:chatId/read', validate(chatValidation.resetUnreadCount), ChatController.resetUnreadCount);
 
 export default chatRoutes;
