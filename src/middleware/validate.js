@@ -7,10 +7,11 @@ const formatValidationErrors = (error) => {
         : { message: "Validation failed", errors: messages };
 };
 
-const validate = (validationFunc) => {
+const validate = (schema) => {
     return async (req, res, next) => {
         try {
-            const result = await validationFunc(req);
+            const { body, params, headers, query } = req;
+            const result = await schema({ body, params, headers, query });
 
             if (result.error) {
                 return res.status(400).json(formatValidationErrors(result.error));
