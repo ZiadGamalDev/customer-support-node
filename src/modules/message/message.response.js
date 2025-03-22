@@ -4,8 +4,7 @@ const messageResponse = (message) => {
   return {
     id: message._id,
     chatId: message.chatId,
-    sender: userResponse(message.sender),
-    receiver: userResponse(message.receiver),
+    userId: message.userId,
     message: message.message,
     status: message.status,
     createdAt: message.createdAt,
