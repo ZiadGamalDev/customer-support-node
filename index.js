@@ -16,5 +16,5 @@ const server = app.listen(PORT, () => console.log(`Server running at ${BASE_URL}
 
 const io = new Server(server, { cors: '*' });
 
-io.use(authenticateSocket);
+// io.use(authenticateSocket);
 io.on('connection', (socket) => resourceSockets(socket, io));
