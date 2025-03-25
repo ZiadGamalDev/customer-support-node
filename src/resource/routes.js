@@ -20,7 +20,7 @@ const resourceRoutes = (app) => {
   app.use('/password', passwordRoutes);
 
   app.use('/profile', authenticate(roles.USER), verify('email'), profileRoutes);
-  app.use('/chats', authenticate(roles.USER), verify('email'), chatRoutes);
+  app.use('/chats', authenticate(roles.CUSTOMER), chatRoutes);
   app.use('/messages', authenticate(roles.USER), verify('email'), messageRoutes);
   
   app.use('/admin/users', authenticate(roles.ADMIN), userRoutes);

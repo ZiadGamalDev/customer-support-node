@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../database/models/user.model.js';
+import { roles } from '../database/enums/user.enum.js';
 
 const authenticate = (role = null) => async (req, res, next) => {    
     try {
@@ -9,6 +10,12 @@ const authenticate = (role = null) => async (req, res, next) => {
         }
 
         const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (role == roles.CUSTOMER) {
+            req.customerId = id;
+            next();
+        }
+
         const user = await User.findById(id);
 
         if (!user) {
