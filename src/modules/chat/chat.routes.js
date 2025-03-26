@@ -6,7 +6,7 @@ import chatValidation from './chat.validation.js';
 const chatRoutes = Router();
 
 chatRoutes.get('/', ChatController.all);
-chatRoutes.post('/', validate(chatValidation.findOrCreate), ChatController.findOrCreate);
+chatRoutes.post('/', ChatController.findOrCreate);
 chatRoutes.put('/:chatId/read', validate(chatValidation.resetUnreadCount), ChatController.resetUnreadCount);
 
 export default chatRoutes;
