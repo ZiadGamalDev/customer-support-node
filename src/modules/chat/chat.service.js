@@ -7,7 +7,6 @@ class ChatService {
       $or: [{ agentId: userId }, { customerId: userId }],
     })
       .populate("agentId", "id name email image")
-      .populate("customerId", "id name email image")
       .populate("lastMessage");
   }
 
@@ -27,7 +26,6 @@ class ChatService {
     }
 
     return await chat.populate([
-      { path: "customerId", select: "id name email image" },
       { path: "agentId", select: "id name email image" },
       { path: "lastMessage" },
     ]);
@@ -40,7 +38,6 @@ class ChatService {
       { new: true }
     )
       .populate("agentId", "id name email image")
-      .populate("customerId", "id name email image")
       .populate("lastMessage");
   }
 

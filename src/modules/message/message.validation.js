@@ -24,17 +24,16 @@ class MessageValidation {
 
     async send({ body }) {
         const schema = Joi.object({
-            receiver: objectId.required().messages({ 'any.required': 'Receiver ID is required' }),
             message: Joi.string().required().messages({ 'any.required': 'Message cannot be empty' }),
         });
 
         const { error } = schema.validate(body, { abortEarly: false });
         if (error) return { error };
 
-        // Check if receiver exists
-        if (! await User.exists({ _id: body.receiver })) {
-            return { error: { details: [{ message: 'Receiver not found' }] } };
-        }
+        // // Check if receiver exists
+        // if (! await User.exists({ _id: body.receiver })) {
+        //     return { error: { details: [{ message: 'Receiver not found' }] } };
+        // }
 
         return {};
     }

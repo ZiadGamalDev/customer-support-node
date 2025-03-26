@@ -1,11 +1,9 @@
 import messageResponse from "../message/message.response.js";
-import userResponse from "../user/user.response.js";
 
 const chatResponse = (chat) => {
   return {
     id: chat._id,
-    customer: chat.customerId,
-
+    customerId: chat.customerId,
     agent: chat.agentId,
     lastMessage: chat.lastMessage ? messageResponse(chat.lastMessage) : null,
     unreadCount: chat.unreadCount,

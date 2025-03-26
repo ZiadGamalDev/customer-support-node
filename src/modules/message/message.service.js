@@ -1,12 +1,11 @@
 import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { statuses } from "../../database/enums/message.enum.js";
+
 class MessageService {
   async all(chatId) {
     return await Message.find({ chatId })
-      .sort({ createdAt: 1 })
-      .populate("senderId", "name email image")
-      .populate("receiverId", "name email image");
+      .sort({ createdAt: 1 });
   }
 
   async create({ chatId, senderId, content }) {

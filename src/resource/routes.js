@@ -31,7 +31,7 @@ const resourceRoutes = (app) => {
 
   app.use('/profile', authenticate(roles.USER), verify('email'), profileRoutes);
   app.use('/chats', authenticate(roles.CUSTOMER), chatRoutes);
-  app.use('/messages', authenticate(roles.USER), verify('email'), messageRoutes);
+  app.use('/messages', messageRoutes); // temporary remove: authenticate(roles.USER), verify('email')
 
   app.use('/admin/users', authenticate(roles.ADMIN), userRoutes);
 

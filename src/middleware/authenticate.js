@@ -15,23 +15,21 @@ const authenticate =
 
       if (role == roles.CUSTOMER) {
         req.customerId = id;
-
-        console.log(req.customerId);
         next();
       }
 
-    //   const user = await User.findById(id);
+      const user = await User.findById(id);
 
-    //   if (!user) {
-    //     return res.status(401).json({ message: "User not found" });
-    //   }
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
 
-    //   if (role && user.role !== role) {
-    //     return res.status(403).json({ message: "Access denied" });
-    //   }
+      if (role && user.role !== role) {
+        return res.status(403).json({ message: "Access denied" });
+      }
 
-    //   req.user = user;
-    //   next();
+      req.user = user;
+      next();
     } catch (err) {
       return res.status(401).json({ message: "Invalid Token" });
     }

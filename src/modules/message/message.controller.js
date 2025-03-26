@@ -1,10 +1,11 @@
+import messageResponse from "./message.response.js";
 import MessageService from "./message.service.js";
 
 class MessageController {
   async all(req, res, next) {
     try {
       const messages = await MessageService.all(req.params.chatId);
-      res.status(200).json(messages);
+      res.status(200).json(messages.map(message => messageResponse(message)));
     } catch (err) {
       next(err);
     }
@@ -17,6 +18,7 @@ class MessageController {
         senderId: req.user.id,
         content: req.body.content,
       });
+      
       res.status(201).json(message);
     } catch (err) {
       next(err);

@@ -9,17 +9,17 @@ const messageSockets = (socket, io) => {
   });
 
   // Handle join chat events
-  socket.on("joinChat", async (chatId, userType) => {
+  socket.on("joinChat", async ({chatId, userType}) => {
     try {
       if (!chatId || !userType) {
         throw new Error("Missing required parameters");
       }
 
-      const userId = chatService.findUserIdByType(chatId, userType);
+      const userId = await chatService.findUserIdByType(chatId, userType);
 
       socket.join(chatId);
-      socket.chatId = chatId;
-      socket.userId = userId;
+      socket.chatId = chatId.toString();
+      socket.userId = userId.toString();
 
       console.log("👋 User joined chat:", {
         event: "joinChat",
@@ -42,6 +42,7 @@ const messageSockets = (socket, io) => {
 
   // Handle send message events
   socket.on("sendMessage", async ({ chatId, message: content }) => {
+    console.log("sendMessage", socket.userId);
     try {
       if (!chatId || !content) {
         throw new Error("Missing required message parameters");
@@ -146,85 +147,85 @@ const messageSockets = (socket, io) => {
   });
 
   // Handle typing events
-  socket.on("startTyping", async ({ chatId, userType }) => {
-    try {
-      if (!chatId || !userType) {
-        throw new Error("Missing required typing parameters");
-      }
+  // socket.on("startTyping", async ({ chatId, userType }) => {
+  //   try {
+  //     if (!chatId || !userType) {
+  //       throw new Error("Missing required typing parameters");
+  //     }
 
-      // Derive receiverId from chatId and userType
-      const receiverId = await chatService.findUserIdByType(chatId, userType);
-      if (!receiverId) {
-        throw new Error("Receiver not found for the given chatId and userType");
-      }
+  //     // Derive receiverId from chatId and userType
+  //     const receiverId = await chatService.findUserIdByType(chatId, userType);
+  //     if (!receiverId) {
+  //       throw new Error("Receiver not found for the given chatId and userType");
+  //     }
 
-      console.log("⌨️ Typing started:", {
-        event: "startTyping",
-        chatId,
-        userId: socket.userId,
-        receiverId,
-      });
+  //     console.log("⌨️ Typing started:", {
+  //       event: "startTyping",
+  //       chatId,
+  //       userId: socket.userId,
+  //       receiverId,
+  //     });
 
-      const receiverSocket = [...io.sockets.sockets.values()].find(
-        (client) => client.userId === receiverId
-      );
+  //     const receiverSocket = [...io.sockets.sockets.values()].find(
+  //       (client) => client.userId === receiverId
+  //     );
 
-      if (receiverSocket) {
-        receiverSocket.emit("typingStarted", { chatId });
-        console.log("📝 Typing indicator sent:", { receiverId });
-      } else {
-        console.log("⚠️ Receiver not found:", { receiverId });
-      }
-    } catch (err) {
-      console.error("❌ Typing indicator error:", {
-        event: "startTyping",
-        error: err.message,
-        chatId,
-        userId: socket.userId,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  });
+  //     if (receiverSocket) {
+  //       receiverSocket.emit("typingStarted", { chatId });
+  //       console.log("📝 Typing indicator sent:", { receiverId });
+  //     } else {
+  //       console.log("⚠️ Receiver not found:", { receiverId });
+  //     }
+  //   } catch (err) {
+  //     console.error("❌ Typing indicator error:", {
+  //       event: "startTyping",
+  //       error: err.message,
+  //       chatId,
+  //       userId: socket.userId,
+  //       timestamp: new Date().toISOString(),
+  //     });
+  //   }
+  // });
 
-  socket.on("stopTyping", async ({ chatId, userType }) => {
-    try {
-      if (!chatId || !userType) {
-        throw new Error("Missing required typing parameters");
-      }
+  // socket.on("stopTyping", async ({ chatId, userType }) => {
+  //   try {
+  //     if (!chatId || !userType) {
+  //       throw new Error("Missing required typing parameters");
+  //     }
 
-      // Derive receiverId from chatId and userType
-      const receiverId = await chatService.findUserIdByType(chatId, userType);
-      if (!receiverId) {
-        throw new Error("Receiver not found for the given chatId and userType");
-      }
+  //     // Derive receiverId from chatId and userType
+  //     const receiverId = await chatService.findUserIdByType(chatId, userType);
+  //     if (!receiverId) {
+  //       throw new Error("Receiver not found for the given chatId and userType");
+  //     }
 
-      console.log("⌨️ Typing stopped:", {
-        event: "stopTyping",
-        chatId,
-        userId: socket.userId,
-        receiverId,
-      });
+  //     console.log("⌨️ Typing stopped:", {
+  //       event: "stopTyping",
+  //       chatId,
+  //       userId: socket.userId,
+  //       receiverId,
+  //     });
 
-      const receiverSocket = [...io.sockets.sockets.values()].find(
-        (client) => client.userId === receiverId
-      );
+  //     const receiverSocket = [...io.sockets.sockets.values()].find(
+  //       (client) => client.userId === receiverId
+  //     );
 
-      if (receiverSocket) {
-        receiverSocket.emit("typingStopped", { chatId });
-        console.log("✋ Typing stop sent:", { receiverId });
-      } else {
-        console.log("⚠️ Receiver not found:", { receiverId });
-      }
-    } catch (err) {
-      console.error("❌ Typing stop error:", {
-        event: "stopTyping",
-        error: err.message,
-        chatId,
-        userId: socket.userId,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  });
+  //     if (receiverSocket) {
+  //       receiverSocket.emit("typingStopped", { chatId });
+  //       console.log("✋ Typing stop sent:", { receiverId });
+  //     } else {
+  //       console.log("⚠️ Receiver not found:", { receiverId });
+  //     }
+  //   } catch (err) {
+  //     console.error("❌ Typing stop error:", {
+  //       event: "stopTyping",
+  //       error: err.message,
+  //       chatId,
+  //       userId: socket.userId,
+  //       timestamp: new Date().toISOString(),
+  //     });
+  //   }
+  // });
 
   // Handle disconnect events
   socket.on("disconnect", () => {
