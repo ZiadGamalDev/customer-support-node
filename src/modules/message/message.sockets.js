@@ -1,8 +1,6 @@
-import axios from "axios";
-import dotenv from "dotenv";
 import MessageService from "./message.service.js";
 import { statuses } from "../../database/enums/message.enum.js";
-dotenv.config();
+import chatService from "../chat/chat.service.js";
 
 const messageSockets = (socket, io) => {
   console.log("🔌 New socket connection:", {
@@ -11,11 +9,13 @@ const messageSockets = (socket, io) => {
   });
 
   // Handle join chat events
-  socket.on("joinChat", async (chatId, userId, userType) => {
+  socket.on("joinChat", async (chatId, userType) => {
     try {
-      if (!chatId || !userId || !userType) {
+      if (!chatId || !userType) {
         throw new Error("Missing required parameters");
       }
+
+      const userId = chatService.findUserIdByType(chatId, userType);
 
       socket.join(chatId);
       socket.chatId = chatId;
@@ -41,7 +41,7 @@ const messageSockets = (socket, io) => {
   });
 
   // Handle send message events
-  socket.on("sendMessage", async ({ chatId, content }) => {
+  socket.on("sendMessage", async ({ chatId, message: content }) => {
     try {
       if (!chatId || !content) {
         throw new Error("Missing required message parameters");
@@ -146,10 +146,16 @@ const messageSockets = (socket, io) => {
   });
 
   // Handle typing events
-  socket.on("startTyping", ({ chatId, receiverId }) => {
+  socket.on("startTyping", async ({ chatId, userType }) => {
     try {
-      if (!chatId || !receiverId) {
+      if (!chatId || !userType) {
         throw new Error("Missing required typing parameters");
+      }
+
+      // Derive receiverId from chatId and userType
+      const receiverId = await chatService.findUserIdByType(chatId, userType);
+      if (!receiverId) {
+        throw new Error("Receiver not found for the given chatId and userType");
       }
 
       console.log("⌨️ Typing started:", {
@@ -180,22 +186,43 @@ const messageSockets = (socket, io) => {
     }
   });
 
-  socket.on("stopTyping", ({ chatId, receiverId }) => {
-    console.log("⌨️ Typing stopped:", {
-      event: "stopTyping",
-      chatId,
-      userId: socket.userId,
-      receiverId,
-    });
+  socket.on("stopTyping", async ({ chatId, userType }) => {
+    try {
+      if (!chatId || !userType) {
+        throw new Error("Missing required typing parameters");
+      }
 
-    const receiverSocket = [...io.sockets.sockets.values()].find(
-      (client) => client.userId === receiverId
-    );
-    if (receiverSocket) {
-      receiverSocket.emit("typingStopped", { chatId });
-      console.log("✋ Typing stop sent:", { receiverId });
-    } else {
-      console.log("⚠️ Receiver not found:", { receiverId });
+      // Derive receiverId from chatId and userType
+      const receiverId = await chatService.findUserIdByType(chatId, userType);
+      if (!receiverId) {
+        throw new Error("Receiver not found for the given chatId and userType");
+      }
+
+      console.log("⌨️ Typing stopped:", {
+        event: "stopTyping",
+        chatId,
+        userId: socket.userId,
+        receiverId,
+      });
+
+      const receiverSocket = [...io.sockets.sockets.values()].find(
+        (client) => client.userId === receiverId
+      );
+
+      if (receiverSocket) {
+        receiverSocket.emit("typingStopped", { chatId });
+        console.log("✋ Typing stop sent:", { receiverId });
+      } else {
+        console.log("⚠️ Receiver not found:", { receiverId });
+      }
+    } catch (err) {
+      console.error("❌ Typing stop error:", {
+        event: "stopTyping",
+        error: err.message,
+        chatId,
+        userId: socket.userId,
+        timestamp: new Date().toISOString(),
+      });
     }
   });
 

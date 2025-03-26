@@ -1,3 +1,4 @@
+import { roles } from "../../database/enums/user.enum.js";
 import Chat from "../../database/models/chat.model.js";
 
 class ChatService {
@@ -41,6 +42,13 @@ class ChatService {
       .populate("agentId", "id name email image")
       .populate("customerId", "id name email image")
       .populate("lastMessage");
+  }
+
+  async findUserIdByType(chatId, userType) {
+    const chat = await Chat.findById(chatId);
+    if (!chat) throw new Error("Chat not found");
+
+    return userType === roles.AGENT ? chat.agentId : chat.customerId;
   }
 }
 
