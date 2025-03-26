@@ -16,6 +16,7 @@ const authenticate =
       if (role == roles.CUSTOMER) {
         req.customerId = id;
         next();
+        return;
       }
 
       const user = await User.findById(id);
