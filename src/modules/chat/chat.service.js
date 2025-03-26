@@ -1,33 +1,47 @@
-import Chat from '../../database/models/chat.model.js';
+import Chat from "../../database/models/chat.model.js";
 
 class ChatService {
-    async all(userId) {
-        return await Chat.find({ participants: userId })
-            .populate('participants', 'id name email image')
-            .populate('lastMessage');
+  async all(userId) {
+    return await Chat.find({
+      $or: [{ agentId: userId }, { customerId: userId }],
+    })
+      .populate("agentId", "id name email image")
+      .populate("customerId", "id name email image")
+      .populate("lastMessage");
+  }
+
+  async findOrCreate(sender, receiver) {
+    let chat = await Chat.findOne({
+      customerId: sender,
+      agentId: receiver,
+    });
+
+    if (!chat) {
+      chat = await Chat.create({
+        customerId: sender,
+        agentId: receiver,
+        title: `Ticket-${Date.now()}`,
+        description: "New support ticket",
+      });
     }
 
-    async findOrCreate(sender, receiver) {
-        let chat = await Chat.findOne({ participants: { $all: [sender, receiver] } });
+    return await chat.populate([
+      { path: "customerId", select: "id name email image" },
+      { path: "agentId", select: "id name email image" },
+      { path: "lastMessage" },
+    ]);
+  }
 
-        if (!chat) {
-            chat = await Chat.create({ participants: [sender, receiver] });
-        }
-
-        return await chat.populate([
-            { path: 'participants', select: 'id name email image' },
-            { path: 'lastMessage' }
-        ]);
-    }
-
-    async resetUnreadCount(userId, chatId) {
-        return await Chat.findByIdAndUpdate(
-            chatId, 
-            { $set: { [`unreadCount.${userId}`]: 0 } }, 
-            { new: true }
-        ).populate('participants', 'id name email image')
-         .populate('lastMessage');
-    }
+  async resetUnreadCount(userId, chatId) {
+    return await Chat.findByIdAndUpdate(
+      chatId,
+      { $set: { [`unreadCount.${userId}`]: 0 } },
+      { new: true }
+    )
+      .populate("agentId", "id name email image")
+      .populate("customerId", "id name email image")
+      .populate("lastMessage");
+  }
 }
 
 export default new ChatService();

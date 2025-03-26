@@ -8,6 +8,6 @@ app.use(express.json());
 app.use(cors());
 
 resourceRoutes(app);
-app.use('/storage', express.static('storage'));
+app.use('/storage', express.static('public'));
 
 export default app;

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Test UI</title>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+      .chat-window {
+        border: 1px solid #ccc;
+        height: 400px;
+        padding: 20px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+      }
+      .message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .sent {
+        background: #e3f2fd;
+        margin-left: 20%;
+      }
+      .received {
+        background: #f5f5f5;
+        margin-right: 20%;
+      }
+      .input-area {
+        display: flex;
+        gap: 10px;
+      }
+      #messageInput {
+        flex: 1;
+        padding: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        background: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .typing {
+        font-style: italic;
+        color: #666;
+      }
+      .status {
+        font-size: 12px;
+        color: #666;
+        text-align: right;
+      }
+      .auth-section {
+        margin-bottom: 20px;
+        padding: 10px;
+        background: #f5f5f5;
+        border-radius: 5px;
+      }
+      .error {
+        color: red;
+        margin: 5px 0;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="auth-section" id="authSection">
+        <h3>Authentication</h3>
+        <input
+          type="text"
+          id="token"
+          placeholder="Enter your JWT token"
+          style="width: 100%; margin-bottom: 10px"
+        />
+        <button onclick="authenticate()">Authenticate</button>
+        <div class="error" id="authError"></div>
+      </div>
+
+      <div class="chat-section hidden" id="chatSection">
+        <h2>Chat Test UI</h2>
+        <div>
+          <input
+            type="text"
+            id="chatId"
+            placeholder="Chat ID"
+            value="testchat123"
+          />
+          <input
+            type="text"
+            id="userId"
+            placeholder="User ID"
+            value="user123"
+          />
+          <select id="userType">
+            <option value="customer">Customer</option>
+            <option value="agent">Agent</option>
+          </select>
+          <button onclick="joinChat()">Join Chat</button>
+        </div>
+        <div class="chat-window" id="chatWindow"></div>
+        <div class="typing" id="typingIndicator"></div>
+        <div class="input-area">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+          />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+      let socket;
+      let currentChatId = "";
+      let currentUserId = "";
+      let authToken = "";
+
+      function authenticate() {
+        const token = document.getElementById("token").value.trim();
+        if (!token) {
+          showAuthError("Token is required");
+          return;
+        }
+
+        // Store token without Bearer prefix
+        authToken = token.replace("Bearer ", "");
+        initializeSocket();
+      }
+
+      function initializeSocket() {
+        socket = io("http://localhost:3000", {
+          auth: {
+            token: `Bearer ${authToken}`,
+          },
+          extraHeaders: {
+            authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        // Socket connection handlers
+        socket.on("connect", () => {
+          console.log("Connected to server with token");
+          document.getElementById("authSection").classList.add("hidden");
+          document.getElementById("chatSection").classList.remove("hidden");
+        });
+
+        socket.on("connect_error", (error) => {
+          console.error("Connection error:", error);
+          showAuthError(`Connection failed: Invalid token or unauthorized`);
+          // Reset UI on auth error
+          document.getElementById("authSection").classList.remove("hidden");
+          document.getElementById("chatSection").classList.add("hidden");
+        });
+
+        // Message handlers
+        socket.on("messageReceived", ({ message }) => {
+          addMessage(message, "received");
+        });
+
+        socket.on("messageDelivered", ({ message }) => {
+          addMessage(message, "sent");
+        });
+
+        socket.on("typingStarted", ({ chatId }) => {
+          document.getElementById("typingIndicator").textContent =
+            "Someone is typing...";
+        });
+
+        socket.on("typingStopped", ({ chatId }) => {
+          document.getElementById("typingIndicator").textContent = "";
+        });
+
+        socket.on("error", ({ message }) => {
+          addSystemMessage(`Error: ${message}`);
+        });
+      }
+
+      function showAuthError(message) {
+        const errorDiv = document.getElementById("authError");
+        errorDiv.textContent = message;
+      }
+
+      function joinChat() {
+        if (!socket?.connected) {
+          showAuthError("Please authenticate first");
+          return;
+        }
+
+        const chatId = document.getElementById("chatId").value;
+        const userId = document.getElementById("userId").value;
+        const userType = document.getElementById("userType").value;
+
+        currentChatId = chatId;
+        currentUserId = userId;
+
+        socket.emit("joinChat", chatId, userId, userType);
+        addSystemMessage(`Joined chat: ${chatId}`);
+      }
+
+      function sendMessage() {
+        if (!socket?.connected) {
+          showAuthError("Please authenticate first");
+          return;
+        }
+
+        const input = document.getElementById("messageInput");
+        const content = input.value.trim();
+
+        if (!content || !currentChatId) return;
+
+        socket.emit("sendMessage", {
+          chatId: currentChatId,
+          content,
+        });
+
+        input.value = "";
+      }
+
+      function addMessage(message, type) {
+        const chatWindow = document.getElementById("chatWindow");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${type}`;
+        messageDiv.innerHTML = `
+                <div>${message.content}</div>
+                <div class="status">${message.status || ""}</div>
+            `;
+        chatWindow.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function addSystemMessage(text) {
+        const chatWindow = document.getElementById("chatWindow");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
+        messageDiv.style.textAlign = "center";
+        messageDiv.style.color = "#666";
+        messageDiv.textContent = text;
+        chatWindow.appendChild(messageDiv);
+      }
+
+      // Typing indicator with authentication check
+      let typingTimeout;
+      document.getElementById("messageInput").addEventListener("input", (e) => {
+        if (!socket?.connected) return;
+
+        clearTimeout(typingTimeout);
+        socket.emit("startTyping", { chatId: currentChatId });
+
+        typingTimeout = setTimeout(() => {
+          socket.emit("stopTyping", { chatId: currentChatId });
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
