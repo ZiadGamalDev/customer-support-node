@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { priorities, statuses } from "../enums/chat.enum.js";
 
 const chatSchema = new Schema(
   {
@@ -28,24 +29,27 @@ const chatSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["open", "in-progress", "resolved", "closed"],
-      default: "open",
+      enum: Object.values(statuses),
+      default: statuses.OPEN,
       index: true,
     },
     priority: {
       type: String,
-      enum: ["low", "medium", "high", "urgent"],
+      enum: Object.values(priorities),
       default: "medium",
       index: true,
     },
-    lastMessage: {
+    lastMessageId: {
       type: Schema.Types.ObjectId,
       ref: "Message",
     },
-    unreadCount: {
-      type: Map,
-      of: Number,
-      default: {},
+    agentUnreadCount: {
+      type: Number,
+      default: 0,
+    },
+    customerUnreadCount: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

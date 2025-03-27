@@ -6,7 +6,7 @@ import Message from '../../database/models/message.model.js';
 import { objectId } from '../../utils/validators.js';
 
 class MessageValidation {
-    async all({ params }) {
+    async chatExistence({ params }) {
         const schema = Joi.object({
             chatId: objectId.required().messages({ 'any.required': 'Chat ID is required' }),
         });
@@ -24,23 +24,24 @@ class MessageValidation {
 
     async send({ body }) {
         const schema = Joi.object({
-            message: Joi.string().required().messages({ 'any.required': 'Message cannot be empty' }),
+            chatId: objectId.required().messages({ 'any.required': 'Chat ID is required' }),
+            content: Joi.string().required().messages({ 'any.required': 'Message content cannot be empty' }),
         });
 
         const { error } = schema.validate(body, { abortEarly: false });
         if (error) return { error };
 
-        // // Check if receiver exists
-        // if (! await User.exists({ _id: body.receiver })) {
-        //     return { error: { details: [{ message: 'Receiver not found' }] } };
-        // }
+        // Check if chat exists
+        if (! await Chat.exists({ _id: body.chatId })) {
+            return { error: { details: [{ message: 'Chat not found' }] } };
+        }
 
         return {};
     }
 
     async updateStatus({ params }) {
         const validStatuses = Object.values(statuses);
-        
+
         const schema = Joi.object({
             messageId: objectId.required().messages({ 'any.required': 'Message ID is required' }),
             status: Joi.string().valid(...validStatuses).required().messages({

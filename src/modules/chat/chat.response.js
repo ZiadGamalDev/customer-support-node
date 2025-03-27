@@ -1,13 +1,16 @@
+import customerResponse from "../customer/customer.response.js";
 import messageResponse from "../message/message.response.js";
+import userResponse from "../user/user.response.js";
 
 const chatResponse = (chat) => {
   return {
     id: chat._id,
-    customerId: chat.customerId,
-    agent: chat.agentId,
-    lastMessage: chat.lastMessage ? messageResponse(chat.lastMessage) : null,
-    unreadCount: chat.unreadCount,
+    customerUnreadCount: chat.customerUnreadCount,
+    agentUnreadCount: chat.agentUnreadCount,
     createdAt: chat.createdAt,
+    lastMessage: chat.lastMessage ? messageResponse(chat.lastMessage) : chat.lastMessageId,
+    customer: chat.customer ? customerResponse(chat.customer) : chat.customerId,
+    agent: chat.agent ? userResponse(chat.agent) : chat.agentId,
   };
 };
 

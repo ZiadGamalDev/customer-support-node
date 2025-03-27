@@ -1,57 +1,37 @@
 import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
-import { statuses } from "../../database/enums/message.enum.js";
+import { roles } from "../../database/enums/user.enum.js";
 
 class MessageService {
   async all(chatId) {
-    return await Message.find({ chatId })
-      .sort({ createdAt: 1 });
+    return await Message.find({ chatId }).sort({ createdAt: 1 });
   }
 
-  async create({ chatId, senderId, content }) {
+  async create(chatId, senderId, content) {
     try {
       const chat = await Chat.findById(chatId);
-      if (!chat) throw new Error("Chat not found");
+      const role = chat.agentId == senderId ? roles.AGENT : roles.CUSTOMER;
 
-      // Determine receiver based on sender
-      const receiverId =
-        senderId === chat.agentId.toString() ? chat.customerId : chat.agentId;
+      const receiverId = role == roles.AGENT ? chat.agentId : chat.customerId;
 
-      // Create message
-      const message = await Message.create({
-        chatId,
-        senderId,
-        receiverId,
-        content,
-        status: statuses.SENT,
-      });
+      const message = await Message.create({ chatId, senderId, receiverId, content });
 
-      // Update chat's last message and unread count
-      await Chat.findByIdAndUpdate(chatId, {
-        lastMessage: message._id,
-        [`unreadCount.${receiverId}`]:
-          (chat.unreadCount.get(receiverId) || 0) + 1,
-      });
+      chat.lastMessageId = message._id;
+      if (role == roles.AGENT) {
+        chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
+      } else {
+        chat.customerUnreadCount = (chat.customerUnreadCount || 0) + 1;
+      }
+      await chat.save();
 
-      return await message.populate([
-        { path: "senderId", select: "name email image" },
-        { path: "receiverId", select: "name email image" },
-      ]);
+      return message;
     } catch (error) {
       throw new Error(`Failed to create message: ${error.message}`);
     }
   }
 
   async updateStatus(messageId, status) {
-    const message = await Message.findByIdAndUpdate(
-      messageId,
-      { status },
-      { new: true }
-    )
-      .populate("senderId", "name email image")
-      .populate("receiverId", "name email image");
-
-    return message;
+    return await Message.findByIdAndUpdate(messageId, { status }, { new: true });
   }
 }
 

@@ -1,51 +1,41 @@
 import { roles } from "../../database/enums/user.enum.js";
 import Chat from "../../database/models/chat.model.js";
+import Message from "../../database/models/message.model.js";
+import UserService from "../user/user.service.js";
 
 class ChatService {
   async all(userId) {
-    return await Chat.find({
-      $or: [{ agentId: userId }, { customerId: userId }],
-    })
-      .populate("agentId", "id name email image")
-      .populate("lastMessage");
+    return await Chat.find({ agentId: userId });
   }
 
-  async findOrCreate(sender, receiver) {
-    let chat = await Chat.findOne({
-      customerId: sender,
-      agentId: receiver,
-    });
+  async findOrCreate(customer) {
+    let chat = await Chat.findOne({ customerId: customer._id });
+    let agent;
 
-    if (!chat) {
-      chat = await Chat.create({
-        customerId: sender,
-        agentId: receiver,
-        title: `Ticket-${Date.now()}`,
-        description: "New support ticket",
-      });
+    if (chat) {
+      agent = await UserService.findById(chat.agentId);
+    } else {
+      agent = await UserService.findAvailableAgent();
+
+      chat = await Chat.create({ customerId: customer._id, agentId: agent._id });
     }
 
-    return await chat.populate([
-      { path: "agentId", select: "id name email image" },
-      { path: "lastMessage" },
-    ]);
+    const lastMessage = await Message.findById(chat.lastMessageId);
+
+    return { ...chat.toObject(), customer, agent, lastMessage };
   }
 
-  async resetUnreadCount(userId, chatId) {
-    return await Chat.findByIdAndUpdate(
-      chatId,
-      { $set: { [`unreadCount.${userId}`]: 0 } },
-      { new: true }
-    )
-      .populate("agentId", "id name email image")
-      .populate("lastMessage");
+  async resetUnreadCount(userId, chatId, role) {
+    return role === roles.AGENT
+      ? await Chat.findOneAndUpdate({ _id: chatId, agentId: userId }, { agentUnreadCount: 0 }, { new: true })
+      : await Chat.findOneAndUpdate({ _id: chatId }, { customerUnreadCount: 0 }, { new: true });
   }
 
-  async findUserIdByType(chatId, userType) {
+  async findChatUserIdByRole(chatId, role) {
     const chat = await Chat.findById(chatId);
     if (!chat) throw new Error("Chat not found");
 
-    return userType === roles.AGENT ? chat.agentId : chat.customerId;
+    return role === roles.AGENT ? chat.agentId : chat.customerId;
   }
 }
 

@@ -1,13 +1,13 @@
 import ChatService from "./chat.service.js";
 import chatResponse from "./chat.response.js";
-import UserService from "../user/user.service.js"; // Add this import
+import { roles } from "../../database/enums/user.enum.js";
 
 class ChatController {
   async all(req, res, next) {
     try {
       const chats = await ChatService.all(req.user.id);
 
-      res.status(200).json(chats.map(chatResponse));
+      res.status(200).json(chats.map(chat => chatResponse(chat)));
     } catch (err) {
       next(err);
     }
@@ -15,22 +15,7 @@ class ChatController {
 
   async findOrCreate(req, res, next) {
     try {
-      // Get all available agents
-      const agents = await UserService.findByRole("agent");
-       
-      if (!agents.length) {
-        return res.status(404).json({
-          message: "No agents available",
-        });
-      }
-
-      // Select random agent
-      const randomAgent = agents[Math.floor(Math.random() * agents.length)];
-
-      const chat = await ChatService.findOrCreate(
-        req.customerId,
-        randomAgent._id
-      );
+      const chat = await ChatService.findOrCreate(req.customer);
 
       res.status(200).json(chatResponse(chat));
     } catch (err) {
@@ -38,12 +23,19 @@ class ChatController {
     }
   }
 
-  async resetUnreadCount(req, res, next) {
+  async agentResetUnreadCount(req, res, next) {
     try {
-      const chat = await ChatService.resetUnreadCount(
-        req.user.id,
-        req.params.chatId
-      );
+      const chat = await ChatService.resetUnreadCount(req.user.id, req.params.chatId, roles.AGENT);
+
+      res.status(200).json(chatResponse(chat));
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async customerResetUnreadCount(req, res, next) {
+    try {
+      const chat = await ChatService.resetUnreadCount(req.customer.id, req.params.chatId, roles.CUSTOMER);
 
       res.status(200).json(chatResponse(chat));
     } catch (err) {
