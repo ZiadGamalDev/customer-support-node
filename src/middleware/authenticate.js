@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../database/models/user.model.js";
 import { roles } from "../database/enums/user.enum.js";
 import axios from "axios";
+import logger from "../utils/logger.js";
 
 const authenticate = (role = null) => async (req, res, next) => {
   try {
@@ -41,6 +42,7 @@ const authenticate = (role = null) => async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+    logger.error("Authentication error", { error: err.message, stack: err.stack });
     return res.status(401).json({ message: "Invalid Token" });
   }
 };
