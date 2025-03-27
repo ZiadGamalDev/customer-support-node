@@ -11,9 +11,7 @@ class MessageService {
     try {
       const chat = await Chat.findById(chatId);
       const role = chat.agentId == senderId ? roles.AGENT : roles.CUSTOMER;
-
-      const receiverId = role == roles.AGENT ? chat.agentId : chat.customerId;
-
+      const receiverId = role == roles.AGENT ? chat.customerId : chat.agentId;
       const message = await Message.create({ chatId, senderId, receiverId, content });
 
       chat.lastMessageId = message._id;
