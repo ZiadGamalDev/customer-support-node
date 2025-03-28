@@ -10,7 +10,7 @@ class MessageService {
   async create(chatId, senderId, content) {
     try {
       const chat = await Chat.findById(chatId);
-      const role = chat.agentId == senderId ? roles.AGENT : roles.CUSTOMER;
+      const role = chat.agentId.equals(senderId) ? roles.AGENT : roles.CUSTOMER;
       const receiverId = role == roles.AGENT ? chat.customerId : chat.agentId;
       const message = await Message.create({ chatId, senderId, receiverId, content });
 
