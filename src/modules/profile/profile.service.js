@@ -1,3 +1,4 @@
+import User from '../../database/models/user.model.js';
 import file from '../../utils/file.js';
 
 class ProfileService {
@@ -11,6 +12,17 @@ class ProfileService {
       }
 
       Object.assign(user, data);
+      await user.save();
+
+      return user;
+    }
+
+    async updateStatus(userId, status) {
+      const user = await User.findById(userId);
+
+      if (!user) throw new Error('User not found');
+
+      user.status = status;
       await user.save();
 
       return user;
