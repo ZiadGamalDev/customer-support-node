@@ -2,6 +2,7 @@ export const statuses = Object.freeze({
   OPEN: 'open',
   IN_PROGRESS: 'in-progress',
   RESOLVED: 'resolved',
+  PENDING: 'pending',
   CLOSED: 'closed',
 });
 

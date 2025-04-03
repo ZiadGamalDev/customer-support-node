@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { roles } from '../enums/user.enum.js';
+import { roles, statuses } from '../enums/user.enum.js';
 import ImageSchema from '../schemas/image.schema.js';
 
 const userSchema = new Schema({
@@ -36,6 +36,11 @@ const userSchema = new Schema({
     age: {
         type: Number,
         trim: true,
+    },
+    status: {
+        type: String,
+        enum: Object.values(statuses),
+        default: statuses.ONLINE,
     },
     emailVerifiedAt: {
         type: Date,
