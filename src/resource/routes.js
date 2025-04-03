@@ -11,7 +11,7 @@ import passwordRoutes from '../modules/password/password.routes.js';
 import profileRoutes from '../modules/profile/profile.routes.js';
 import userRoutes from '../modules/user/user.routes.js';
 import template from '../utils/template.js';
-
+import notificationRoutes from '../modules/notification/notification.routes.js';
 const resourceRoutes = (app) => {
   app.get('/', (_, res) => { res.end(template('welcome.html')) });
   app.use('/dev', devRoutes);
@@ -23,7 +23,7 @@ const resourceRoutes = (app) => {
 
   app.use('/chats', chatRoutes);
   app.use('/messages', messageRoutes);
-
+app.use('/notification', notificationRoutes);
   app.use('/admin/users', authenticate(roles.ADMIN), userRoutes);
 
   app.use(errorHandler);

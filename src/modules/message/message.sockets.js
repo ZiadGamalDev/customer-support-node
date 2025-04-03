@@ -2,11 +2,12 @@ import ChatService from "../chat/chat.service.js";
 import MessageService from "./message.service.js";
 import { statuses } from "../../database/enums/message.enum.js";
 import logger from "../../utils/logger.js";
+import NotificationService from "../notification/notification.service.js";
 
 const messageSockets = (socket, io) => {
   console.log("New socket connection", { socketId: socket.id });
 
-  socket.on("joinChat", async ({chatId, userType}) => {
+  socket.on("joinChat", async ({ chatId, userType }) => {
     try {
       if (!chatId || !userType) {
         throw new Error("Missing required parameters");
@@ -18,9 +19,19 @@ const messageSockets = (socket, io) => {
       socket.chatId = chatId.toString();
       socket.userId = userId.toString();
 
-      console.log("User joined chat", { event: "joinChat", socketId: socket.id, chatId, userId, userType });
+      console.log("User joined chat", {
+        event: "joinChat",
+        socketId: socket.id,
+        chatId,
+        userId,
+        userType,
+      });
     } catch (err) {
-      console.error("Join chat error", { event: "joinChat", error: err.message, socketId: socket.id });
+      console.error("Join chat error", {
+        event: "joinChat",
+        error: err.message,
+        socketId: socket.id,
+      });
       socket.emit("error", { message: "Failed to join chat" });
     }
   });
@@ -35,176 +46,94 @@ const messageSockets = (socket, io) => {
         throw new Error("User not authenticated");
       }
 
-      console.log("Message sending attempt", { event: "sendMessage", chatId, senderId: socket.userId, content });
+      console.log("Message sending attempt", {
+        event: "sendMessage",
+        chatId,
+        senderId: socket.userId,
+        content,
+      });
 
-      const message = await MessageService.create(chatId, socket.userId, content);
+      const message = await MessageService.create(
+        chatId,
+        socket.userId,
+        content
+      );
+      const chat = await ChatService.findById(chatId);
 
-      console.log("Message saved", { messageId: message._id, chatId, senderId: socket.userId });
+      // Create notification
+      const notification = await NotificationService.createMessageNotification(
+        message,
+        chat
+      );
 
+      // Find receiver's sockets and emit notifications
+      const receiverSockets = [...io.sockets.sockets.values()].filter(
+        (s) => s.userId === message.receiverId.toString()
+      );
+
+      receiverSockets.forEach((receiverSocket) => {
+        receiverSocket.emit("notification", notification);
+      });
+
+      // Emit message to chat room
       socket.to(chatId).emit("messageReceived", { message });
 
-      console.log("Message emitted to room", { chatId });
-
-      socket.emit("messageDelivered", { message });
-
-      console.log("Delivery confirmed to sender", { socketId: socket.id });
+      console.log("Message saved and delivered", {
+        messageId: message._id,
+        chatId,
+        senderId: socket.userId,
+      });
     } catch (err) {
-      console.error("Message error", { event: "sendMessage", error: err.message, chatId, senderId: socket.userId });
-      socket.emit("error", { message: "Failed to send message", error: err.message });
+      console.error("Message error", {
+        event: "sendMessage",
+        error: err.message,
+        chatId,
+        senderId: socket.userId,
+      });
+      socket.emit("error", {
+        message: "Failed to send message",
+        error: err.message,
+      });
     }
   });
 
-  // Handle message read events
-  // socket.on("messageRead", async ({ messageId }) => {
-  //   try {
-  //     if (!messageId) {
-  //       throw new Error("Missing message ID");
-  //     }
+  socket.on("markNotificationRead", async ({ notificationId }) => {
+    try {
+      if (!socket.userId) {
+        throw new Error("User not authenticated");
+      }
 
-  //     if (!socket.userId) {
-  //       throw new Error("User not authenticated");
-  //     }
+      await NotificationService.markAsRead(notificationId, socket.userId);
 
-  //     console.log("👀 Message read event:", {
-  //       event: "messageRead",
-  //       messageId,
-  //       userId: socket.userId,
-  //       timestamp: new Date().toISOString(),
-  //     });
+      // Emit to all connections of this user to keep multiple devices in sync
+      const userSockets = [...io.sockets.sockets.values()].filter(
+        (s) => s.userId === socket.userId
+      );
 
-  //     const message = await MessageService.updateStatus(
-  //       messageId,
-  //       statuses.READ
-  //     );
+      userSockets.forEach((userSocket) => {
+        if (userSocket.id !== socket.id) {
+          userSocket.emit("notificationRead", { notificationId });
+        }
+      });
 
-  //     if (!message) {
-  //       throw new Error("Message not found");
-  //     }
+      console.log("Notification marked as read", {
+        notificationId,
+        userId: socket.userId,
+      });
+    } catch (err) {
+      console.error("Notification read error", { error: err.message });
+      socket.emit("error", { message: "Failed to mark notification as read" });
+    }
+  });
 
-  //     io.to(message.chatId.toString()).emit("messageStatusUpdated", {
-  //       messageId,
-  //       status: statuses.READ,
-  //     });
-
-  //     console.log("✓ Message status updated:", {
-  //       messageId,
-  //       status: statuses.READ,
-  //       chatId: message.chatId,
-  //     });
-  //   } catch (err) {
-  //     console.error("❌ Status update error:", {
-  //       event: "messageRead",
-  //       error: err.message,
-  //       messageId,
-  //       userId: socket.userId,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //     socket.emit("error", {
-  //       message: "Failed to update message status",
-  //       error: err.message,
-  //     });
-  //   }
-  // });
-  // Handle typing events
-  // socket.on("startTyping", async ({ chatId, userType }) => {
-  //   try {
-  //     if (!chatId || !userType) {
-  //       throw new Error("Missing required typing parameters");
-  //     }
-
-  //     // Derive receiverId from chatId and userType
-  //     const receiverId = await ChatService.findUserIdByType(chatId, userType);
-  //     if (!receiverId) {
-  //       throw new Error("Receiver not found for the given chatId and userType");
-  //     }
-
-  //     console.log("⌨️ Typing started:", {
-  //       event: "startTyping",
-  //       chatId,
-  //       userId: socket.userId,
-  //       receiverId,
-  //     });
-
-  //     const receiverSocket = [...io.sockets.sockets.values()].find(
-  //       (client) => client.userId === receiverId
-  //     );
-
-  //     if (receiverSocket) {
-  //       receiverSocket.emit("typingStarted", { chatId });
-  //       console.log("📝 Typing indicator sent:", { receiverId });
-  //     } else {
-  //       console.log("⚠️ Receiver not found:", { receiverId });
-  //     }
-  //   } catch (err) {
-  //     console.error("❌ Typing indicator error:", {
-  //       event: "startTyping",
-  //       error: err.message,
-  //       chatId,
-  //       userId: socket.userId,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   }
-  // });
-
-  // socket.on("stopTyping", async ({ chatId, userType }) => {
-  //   try {
-  //     if (!chatId || !userType) {
-  //       throw new Error("Missing required typing parameters");
-  //     }
-
-  //     // Derive receiverId from chatId and userType
-  //     const receiverId = await ChatService.findUserIdByType(chatId, userType);
-  //     if (!receiverId) {
-  //       throw new Error("Receiver not found for the given chatId and userType");
-  //     }
-
-  //     console.log("⌨️ Typing stopped:", {
-  //       event: "stopTyping",
-  //       chatId,
-  //       userId: socket.userId,
-  //       receiverId,
-  //     });
-
-  //     const receiverSocket = [...io.sockets.sockets.values()].find(
-  //       (client) => client.userId === receiverId
-  //     );
-
-  //     if (receiverSocket) {
-  //       receiverSocket.emit("typingStopped", { chatId });
-  //       console.log("✋ Typing stop sent:", { receiverId });
-  //     } else {
-  //       console.log("⚠️ Receiver not found:", { receiverId });
-  //     }
-  //   } catch (err) {
-  //     console.error("❌ Typing stop error:", {
-  //       event: "stopTyping",
-  //       error: err.message,
-  //       chatId,
-  //       userId: socket.userId,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   }
-  // });
-
-  // Handle disconnect events
-  // socket.on("disconnect", () => {
-  //   try {
-  //     console.log("👋 User disconnected:", {
-  //       event: "disconnect",
-  //       socketId: socket.id,
-  //       userId: socket.userId,
-  //       chatId: socket.chatId,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   } catch (err) {
-  //     console.error("❌ Disconnect error:", {
-  //       event: "disconnect",
-  //       error: err.message,
-  //       socketId: socket.id,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   }
-  // });
+  socket.on("disconnect", () => {
+    console.log("User disconnected", {
+      event: "disconnect",
+      socketId: socket.id,
+      userId: socket.userId,
+      chatId: socket.chatId,
+    });
+  });
 };
 
 export default messageSockets;
