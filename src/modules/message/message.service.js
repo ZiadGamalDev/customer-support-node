@@ -1,6 +1,7 @@
 import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { roles } from "../../database/enums/user.enum.js";
+import { statuses } from "../../database/enums/chat.enum.js";
 
 class MessageService {
   async all(chatId) {
@@ -17,6 +18,10 @@ class MessageService {
       chat.lastMessageId = message._id;
       if (role == roles.AGENT) {
         chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
+
+        if (this.isFirstReply(chat)) {
+          await this.handleFirstReply(chat);
+        }
       } else {
         chat.customerUnreadCount = (chat.customerUnreadCount || 0) + 1;
       }
@@ -30,6 +35,15 @@ class MessageService {
 
   async updateStatus(messageId, status) {
     return await Message.findByIdAndUpdate(messageId, { status }, { new: true });
+  }
+
+  async isFirstReply(chat) {
+    return chat.status == statuses.OPEN
+  }
+
+  async handleFirstReply(chat) {
+    chat.status = statuses.IN_PROGRESS
+    await chat.save();
   }
 }
 

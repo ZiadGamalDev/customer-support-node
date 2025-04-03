@@ -1,5 +1,6 @@
 import file from "../../utils/file.js";
 import User from "../../database/models/user.model.js";
+import { roles, statuses } from "../../database/enums/user.enum.js";
 
 class UserService {
   async findById(userId) {
@@ -22,12 +23,30 @@ class UserService {
   }
 
   async findAvailableAgent() {
-    const agents = await User.find({ role: "agent" }); // Todo: find isAvailable: true
-    if (!agents.length) {
+    let agent = await User.findOne({ role: roles.AGENT, status: statuses.ONLINE });
+
+    if (!agent) {
+      agent = await User.findOne({ role: roles.AGENT, status: statuses.BUSY, chatsCount: { $lt: 3 } });
+    }
+
+    if (!agent) {
       throw new Error("No agents available");
     }
 
-    return agents[Math.floor(Math.random() * agents.length)];
+    this.updateAgentStatus(agent, statuses.BUSY);
+
+    return agent;
+  }
+
+  async updateAgentStatus(agent, status) {
+    if (!Object.values(statuses).includes(status)) {
+      throw new Error("Invalid status value");
+    }
+
+    agent.status = status;
+    await agent.save();
+
+    return agent;
   }
 }
 

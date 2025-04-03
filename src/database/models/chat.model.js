@@ -6,7 +6,7 @@ const chatSchema = new Schema(
     agentId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
       index: true,
     },
     customerId: {

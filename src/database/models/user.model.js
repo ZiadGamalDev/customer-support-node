@@ -42,6 +42,10 @@ const userSchema = new Schema({
         enum: Object.values(statuses),
         default: statuses.ONLINE,
     },
+    chatsCount: {
+        type: Number,
+        default: 0,
+    },
     emailVerifiedAt: {
         type: Date,
     },
