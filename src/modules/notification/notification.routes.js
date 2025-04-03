@@ -1,7 +1,7 @@
 import { Router } from "express";
 import NotificationController from "./notification.controller.js";
 import authenticate from "../../middleware/authenticate.js";
-import validate from "../../middleware/validate.js";
+
 
 
 const notificationRoutes = Router();

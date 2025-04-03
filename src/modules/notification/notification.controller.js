@@ -53,7 +53,7 @@ class NotificationController {
 
   async markAllAsRead(req, res, next) {
     try {
-      // Can apply filters from request body
+     
       const { type, referenceModel } = req.body;
       const filter = {};
 

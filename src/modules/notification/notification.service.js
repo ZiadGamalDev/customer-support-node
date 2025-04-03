@@ -6,13 +6,13 @@ import { roles } from "../../database/enums/user.enum.js";
 class NotificationService {
   async createMessageNotification(message, chat) {
     try {
-      // Get sender info for better notification content
+    
       const role = message.senderId.equals(chat.agentId) ? roles.AGENT : roles.CUSTOMER;
       
-      // Determine message preview
+      
       const preview = message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '');
       
-      // Create notification in database
+     
       const notification = await Notification.create({
         userId: message.receiverId,
         type: 'message',
