@@ -5,6 +5,10 @@ import userResponse from "../user/user.response.js";
 const chatResponse = (chat) => {
   return {
     id: chat._id,
+    title: chat.title,
+    description: chat.description,
+    status: chat.status,
+    priority: chat.priority,
     customerUnreadCount: chat.customerUnreadCount,
     agentUnreadCount: chat.agentUnreadCount,
     createdAt: chat.createdAt,

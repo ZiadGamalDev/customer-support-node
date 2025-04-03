@@ -33,4 +33,11 @@ chatRoutes.put(
   ChatController.customerResetUnreadCount
 );
 
+chatRoutes.put(
+  '/agent/:chatId/:status',
+  authenticate(roles.AGENT),
+  validate(chatValidation.updateStatus),
+  ChatController.agentUpdateStatus
+);
+
 export default chatRoutes;
