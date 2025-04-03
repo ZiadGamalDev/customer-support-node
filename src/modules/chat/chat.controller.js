@@ -42,6 +42,16 @@ class ChatController {
       next(err);
     }
   }
+
+  async agentUpdateStatus(req, res, next) {
+    try {
+      const chat = await ChatService.updateStatus(req.user.id, req.params.chatId, req.params.status, roles.AGENT);
+
+      res.status(200).json(chatResponse(chat));
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new ChatController();

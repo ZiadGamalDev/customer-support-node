@@ -37,6 +37,22 @@ class ChatService {
 
     return role === roles.AGENT ? chat.agentId : chat.customerId;
   }
+
+  async updateStatus(userId, chatId, status, role) {
+    const chat = await Chat.findOneAndUpdate(
+      { _id: chatId, [`${role}Id`]: userId },
+      { status },
+      { new: true }
+    );
+
+    if (!chat) {
+      throw new Error(
+        `Chat not found or insufficient permissions. Ensure chat ID ${chatId} exists and user ${userId} has the correct role (${role}).`
+      );
+    }
+
+    return chat;
+  }
 }
 
 export default new ChatService();
