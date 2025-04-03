@@ -29,7 +29,6 @@ class NotificationService {
         }
       });
 
-      // Also update unread count in chat model
       if (role === roles.AGENT) {
         await Chat.findByIdAndUpdate(chat._id, { $inc: { customerUnreadCount: 1 } });
       } else {
@@ -45,7 +44,7 @@ class NotificationService {
   async getUserNotifications(userId, options = {}) {
     const { limit = 20, offset = 0, read, sort = { createdAt: -1 } } = options;
     
-    // Build query
+   
     const query = { userId };
     if (read !== undefined) {
       query.read = read;
