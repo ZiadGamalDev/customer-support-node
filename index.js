@@ -17,6 +17,7 @@ const server = app.listen(PORT, () =>
 );
 const io = new Server(server, { cors: "*" });
 
+global.io = io;
 // io.use(authenticateSocket);
 io.on("connection", (socket) => resourceSockets(socket, io));
 

@@ -1,4 +1,3 @@
-
 import Notification from "../../database/models/notification.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { roles } from "../../database/enums/user.enum.js";
@@ -6,13 +5,10 @@ import { roles } from "../../database/enums/user.enum.js";
 class NotificationService {
   async createMessageNotification(message, chat) {
     try {
-    
       const role = message.senderId.equals(chat.agentId) ? roles.AGENT : roles.CUSTOMER;
-      
       
       const preview = message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '');
       
-     
       const notification = await Notification.create({
         userId: message.receiverId,
         type: 'message',
@@ -41,10 +37,40 @@ class NotificationService {
     }
   }
   
+  //  method to create chat notifications when a customer starts or resumes a chat
+  async createChatNotification(chat, type = 'new') {
+    try {
+      const title = type === 'new' ? 'New customer chat' : 'Customer resumed chat';
+      const content = type === 'new' 
+        ? `A new customer needs assistance`
+        : `Customer has resumed a previously resolved chat`;
+      
+      const notification = await Notification.create({
+        userId: chat.agentId,
+        type: 'chat_assignment',
+        title,
+        content,
+        read: false,
+        reference: {
+          model: 'Chat',
+          id: chat._id
+        },
+        metadata: {
+          chatId: chat._id,
+          chatStatus: chat.status,
+          customerName: chat.customer?.name || 'Customer'
+        }
+      });
+      
+      return notification;
+    } catch (error) {
+      throw new Error(`Failed to create chat notification: ${error.message}`);
+    }
+  }
+  
   async getUserNotifications(userId, options = {}) {
     const { limit = 20, offset = 0, read, sort = { createdAt: -1 } } = options;
     
-   
     const query = { userId };
     if (read !== undefined) {
       query.read = read;
