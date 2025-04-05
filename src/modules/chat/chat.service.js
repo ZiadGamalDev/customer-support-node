@@ -19,10 +19,12 @@ class ChatService {
 
     if (chat) {
       agent = await UserService.findById(chat.agentId);
+      // Todo: notify the agent if chat was resolved
     } else {
       agent = await UserService.findAvailableAgent();
       chat = await Chat.create({ customerId: customer._id, agentId: agent._id });
       this.assignAgent(chat, agent);
+      // Todo: notify the agent
     }
 
     const lastMessage = await Message.findById(chat.lastMessageId);

@@ -2,10 +2,29 @@ import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { roles } from "../../database/enums/user.enum.js";
 import { statuses } from "../../database/enums/chat.enum.js";
+import User from "../../database/models/user.model.js";
 
 class MessageService {
   async all(chatId) {
-    return await Message.find({ chatId }).sort({ createdAt: 1 });
+    const messages = await Message.find({ chatId }).sort({ createdAt: 1 }).lean();
+
+    const userIds = new Set();
+    messages.forEach(msg => {
+      userIds.add(msg.senderId.toString());
+      userIds.add(msg.receiverId.toString());
+    });
+
+    const users = await User.find({ _id: { $in: Array.from(userIds) } }, 'name email').lean();
+    const userMap = users.reduce((acc, user) => {
+      acc[user._id.toString()] = user;
+      return acc;
+    }, {});
+
+    return messages.map(msg => ({
+      ...msg,
+      sender: userMap[msg.senderId.toString()] || null,
+      receiver: userMap[msg.receiverId.toString()] || null,
+    }));
   }
 
   async create(chatId, senderId, content) {
