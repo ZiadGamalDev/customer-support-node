@@ -19,6 +19,9 @@ const messageSockets = (socket, io) => {
       socket.chatId = chatId.toString();
       socket.userId = userId.toString();
 
+      // Store user type to know if this is agent or customer
+      socket.userType = userType;
+
       console.log("User joined chat", {
         event: "joinChat",
         socketId: socket.id,
@@ -123,6 +126,26 @@ const messageSockets = (socket, io) => {
     } catch (err) {
       console.error("Notification read error", { error: err.message });
       socket.emit("error", { message: "Failed to mark notification as read" });
+    }
+  });
+
+  //  event to handle agent availability status
+  //IMPORTANT
+  socket.on("updateAgentStatus", async ({ status }) => {
+    try {
+      if (!socket.userId || socket.userType !== "AGENT") {
+        throw new Error("Not authorized or not an agent");
+      }
+
+      await UserService.updateStatus(socket.userId, status);
+
+      console.log("Agent status updated", {
+        agentId: socket.userId,
+        status,
+      });
+    } catch (err) {
+      console.error("Agent status update error", { error: err.message });
+      socket.emit("error", { message: "Failed to update agent status" });
     }
   });
 
