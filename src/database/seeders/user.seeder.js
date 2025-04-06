@@ -1,6 +1,6 @@
 import User from '../models/user.model.js';
 import { hash } from '../../utils/crypto.js';
-import { roles } from '../enums/user.enum.js';
+import { roles, statuses } from '../enums/user.enum.js';
 
 const password = await hash('123456789');
 const date = new Date();
@@ -8,6 +8,7 @@ const date = new Date();
 const users = [
     {
         role: roles.ADMIN,
+        status: statuses.ONLINE,
         name: 'Admin',
         email: 'admin@example.com',
         password: password,
@@ -16,6 +17,7 @@ const users = [
     },
     {
         role: roles.USER,
+        status: statuses.ONLINE,
         name: 'User',
         email: 'user@example.com',
         password: password,
@@ -24,58 +26,29 @@ const users = [
     },
     {
         role: roles.AGENT,
-        name: 'Alice Smith',
-        email: 'alice@example.com',
+        status: statuses.ONLINE,
+        name: 'Ziad Gamal',
+        email: 'ziadgamal@example.com',
         password: password,
         phone: '1234567892',
         emailVerifiedAt: date,
     },
     {
         role: roles.AGENT,
-        name: 'Bob Johnson',
-        email: 'bob@example.com',
+        status: statuses.ONLINE,
+        name: 'Sara Khaled',
+        email: 'sarakhaled@example.com',
         password: password,
         phone: '1234567893',
         emailVerifiedAt: date,
     },
     {
         role: roles.AGENT,
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
+        status: statuses.ONLINE,
+        name: 'Ahmed Frag',
+        email: 'ahmedfrag@example.com',
         password: password,
         phone: '1234567894',
-        emailVerifiedAt: date,
-    },
-    {
-        role: roles.AGENT,
-        name: 'David Wilson',
-        email: 'david@example.com',
-        password: password,
-        phone: '1234567895',
-        emailVerifiedAt: date,
-    },
-    {
-        role: roles.AGENT,
-        name: 'Eva Green',
-        email: 'eva@example.com',
-        password: password,
-        phone: '1234567896',
-        emailVerifiedAt: date,
-    },
-    {
-        role: roles.AGENT,
-        name: 'Frank White',
-        email: 'frank@example.com',
-        password: password,
-        phone: '1234567897',
-        emailVerifiedAt: date,
-    },
-    {
-        role: roles.AGENT,
-        name: 'Grace Black',
-        email: 'grace@example.com',
-        password: password,
-        phone: '1234567898',
         emailVerifiedAt: date,
     },
 ];
