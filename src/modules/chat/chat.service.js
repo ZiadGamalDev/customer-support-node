@@ -74,7 +74,7 @@ class ChatService {
         (socket) => socket.userId === agentId.toString()
       );
 
-      // Emit the notification to all agent's connected devices
+  
       agentSockets.forEach((socket) => {
         socket.emit("notification", notification);
       });
@@ -150,13 +150,13 @@ class ChatService {
   async assignAgent(chat, agent) {
     chat.status = statuses.OPEN;
     await this.updateAgentAndChat(chat, agent);
-  }
+  } //first assignment for chat
 
   async reAssignAgent(chat, agent) {
     chat.agentId = agent._id;
     chat.status = statuses.IN_PROGRESS;
     await this.updateAgentAndChat(chat, agent);
-  }
+  } // resume chat or agent is busy
 
   async updateAgentAndChat(chat, agent) {
     await chat.save();
