@@ -20,23 +20,47 @@ class ChatService {
     let isNewChat = false;
 
     if (chat) {
-      // If chat was previously resolved, notify the agent about resumed chat
       if (chat.status === statuses.RESOLVED) {
+        // If chat was previously resolved, find available agent and reassign
         agent = await UserService.findAvailableAgent();
         this.reAssignAgent(chat, agent);
 
-        // Create notification for the agent about resumed chat
+        // Notify about resumed chat
         const notification = await NotificationService.createChatNotification(
           { ...chat.toObject(), customer },
           "resumed"
         );
-
-        // Emit notification to the agent via socket if they're online
         this.emitNotificationToAgent(agent._id, notification);
       } else {
-        agent = await UserService.findById(chat.agentId);
+        // Chat is not resolved, check if previous agent is available
+        const previousAgent = await UserService.findById(chat.agentId);
+
+        if (previousAgent && previousAgent.status === userStatuses.ONLINE) {
+          // Previous agent is available, reassign chat to them
+          agent = previousAgent;
+          this.reAssignAgent(chat, agent);
+
+          // Notify about reassignment to same agent
+          const notification = await NotificationService.createChatNotification(
+            { ...chat.toObject(), customer },
+            "reassigned"
+          );
+          this.emitNotificationToAgent(agent._id, notification);
+        } else {
+          // Previous agent is not available, find new available agent
+          agent = await UserService.findAvailableAgent();
+          this.reAssignAgent(chat, agent);
+
+          // Notify about reassignment to new agent
+          const notification = await NotificationService.createChatNotification(
+            { ...chat.toObject(), customer },
+            "reassigned"
+          );
+          this.emitNotificationToAgent(agent._id, notification);
+        }
       }
     } else {
+      // Create new chat with available agent
       isNewChat = true;
       agent = await UserService.findAvailableAgent();
       chat = await Chat.create({
@@ -47,18 +71,15 @@ class ChatService {
 
       await this.assignAgent(chat, agent);
 
-      // Create notification for the agent about new chat
+      // Notify about new chat
       const notification = await NotificationService.createChatNotification(
         { ...chat.toObject(), customer },
         "new"
       );
-
-      // Emit notification to the agent via socket if they're online
       this.emitNotificationToAgent(agent._id, notification);
     }
 
     const lastMessage = await Message.findById(chat.lastMessageId);
-
     return { ...chat.toObject(), customer, agent, lastMessage };
   }
 
@@ -74,7 +95,6 @@ class ChatService {
         (socket) => socket.userId === agentId.toString()
       );
 
-  
       agentSockets.forEach((socket) => {
         socket.emit("notification", notification);
       });
@@ -83,20 +103,18 @@ class ChatService {
     }
   }
 
-
-
   async resetUnreadCount(userId, chatId, role) {
     return role === roles.AGENT
       ? await Chat.findOneAndUpdate(
-        { _id: chatId, agentId: userId },
-        { agentUnreadCount: 0 },
-        { new: true }
-      )
+          { _id: chatId, agentId: userId },
+          { agentUnreadCount: 0 },
+          { new: true }
+        )
       : await Chat.findOneAndUpdate(
-        { _id: chatId },
-        { customerUnreadCount: 0 },
-        { new: true }
-      );
+          { _id: chatId },
+          { customerUnreadCount: 0 },
+          { new: true }
+        );
   }
 
   async findChatUserIdByRole(chatId, role) {
