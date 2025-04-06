@@ -27,12 +27,16 @@ class AuthService {
     }
 
     async login(user) {
-        user.status = statuses.ONLINE;
+        if (user.status === statuses.OFFLINE) {
+            user.status = statuses.ONLINE;
+        }
         await user.save();
     }
 
     async logout(user) {
-        user.status = statuses.OFFLINE;
+        if (user.status === statuses.ONLINE) {
+            user.status = statuses.OFFLINE;
+        }
         await user.save();
     }
 }
