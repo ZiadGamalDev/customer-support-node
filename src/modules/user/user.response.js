@@ -5,6 +5,7 @@ const userResponse = (user) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+        status: user.status,
         age: user.age,
         image: user.image?.url,
         emailVerifiedAt: user.emailVerifiedAt,

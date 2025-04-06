@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { statuses } from "../enums/message.enum.js";
+import { roles } from "../enums/user.enum.js";
 
 const messageSchema = new Schema(
   {
@@ -30,6 +31,11 @@ const messageSchema = new Schema(
       type: String,
       enum: Object.values(statuses),
       default: statuses.SENT,
+    },
+    senderRole: {
+      type: String,
+      enum: Object.values(roles),
+      required: true,
     },
   },
   { timestamps: true }

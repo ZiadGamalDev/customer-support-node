@@ -2,40 +2,25 @@ import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { roles } from "../../database/enums/user.enum.js";
 import { statuses } from "../../database/enums/chat.enum.js";
-import User from "../../database/models/user.model.js";
 
 class MessageService {
   async all(chatId) {
-    const messages = await Message.find({ chatId }).sort({ createdAt: 1 }).lean();
-
-    const userIds = new Set();
-    messages.forEach(msg => {
-      userIds.add(msg.senderId.toString());
-      userIds.add(msg.receiverId.toString());
-    });
-
-    const users = await User.find({ _id: { $in: Array.from(userIds) } }, 'name email').lean();
-    const userMap = users.reduce((acc, user) => {
-      acc[user._id.toString()] = user;
-      return acc;
-    }, {});
-
-    return messages.map(msg => ({
-      ...msg,
-      sender: userMap[msg.senderId.toString()] || null,
-      receiver: userMap[msg.receiverId.toString()] || null,
-    }));
+    return await Message.find({ chatId })
+      .sort({ createdAt: 1 })
+      .populate('senderId', 'name email')
+      .populate('receiverId', 'name email')
+      .lean();
   }
 
   async create(chatId, senderId, content) {
     try {
       const chat = await Chat.findById(chatId);
-      const role = chat.agentId.equals(senderId) ? roles.AGENT : roles.CUSTOMER;
-      const receiverId = role == roles.AGENT ? chat.customerId : chat.agentId;
-      const message = await Message.create({ chatId, senderId, receiverId, content });
+      const senderRole = chat.agentId.equals(senderId) ? roles.AGENT : roles.CUSTOMER;
+      const receiverId = senderRole == roles.AGENT ? chat.customerId : chat.agentId;
+      const message = await Message.create({ chatId, senderId, receiverId, content, senderRole });
 
       chat.lastMessageId = message._id;
-      if (role == roles.AGENT) {
+      if (senderRole == roles.AGENT) {
         chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
 
         if (this.isFirstReply(chat)) {
