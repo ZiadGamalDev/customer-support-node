@@ -19,7 +19,14 @@ const io = new Server(server, { cors: "*" });
 
 global.io = io;
 // io.use(authenticateSocket);
-io.on("connection", (socket) => resourceSockets(socket, io));
+io.on("connection", (socket) => {
+  resourceSockets(socket, io);
+  // Authenticate user and set socket.userId
+  socket.on("authenticate", (data) => {
+    const userId = data.userId;
+    socket.userId = userId;
+  });
+});
 
 process.on("SIGTERM", () => {
   console.log("SIGTERM signal received: closing HTTP server");
