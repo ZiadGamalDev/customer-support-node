@@ -3,6 +3,7 @@ import MessageService from "./message.service.js";
 import { statuses } from "../../database/enums/message.enum.js";
 import logger from "../../utils/logger.js";
 import NotificationService from "../notification/notification.service.js";
+import UserService from "../user/user.service.js";
 
 const messageSockets = (socket, io) => {
   console.log("New socket connection", { socketId: socket.id });
@@ -137,7 +138,7 @@ const messageSockets = (socket, io) => {
         throw new Error("Not authorized or not an agent");
       }
 
-      await UserService.updateStatus(socket.userId, status);
+      await UserService.updateAgentStatus(socket.userId, status);
 
       console.log("Agent status updated", {
         agentId: socket.userId,
