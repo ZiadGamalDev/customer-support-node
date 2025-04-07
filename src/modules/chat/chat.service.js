@@ -14,6 +14,12 @@ class ChatService {
     });
   }
 
+  async findById(chatId) {
+    const chat = await Chat.findById(chatId);
+    if (!chat) throw new Error("Chat not found");
+    return chat;
+  }
+
   async findOrCreate(customer) {
     let chat = await Chat.findOne({ customerId: customer._id });
     let agent;

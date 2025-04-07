@@ -1,7 +1,6 @@
 import ChatService from "../chat/chat.service.js";
 import MessageService from "./message.service.js";
-import { statuses } from "../../database/enums/message.enum.js";
-import logger from "../../utils/logger.js";
+import ChatService from "./chat.service.js";
 import NotificationService from "../notification/notification.service.js";
 import UserService from "../user/user.service.js";
 
