@@ -1,6 +1,5 @@
 import ChatService from "../chat/chat.service.js";
 import MessageService from "./message.service.js";
-import ChatService from "./chat.service.js";
 import NotificationService from "../notification/notification.service.js";
 import UserService from "../user/user.service.js";
 
