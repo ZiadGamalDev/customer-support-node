@@ -29,7 +29,7 @@ class ProfileService {
     user.status = status;
     await user.save();
 
-    if ((status = statuses.AWAY)) {
+    if (status == statuses.AWAY) {
       this.handleAwayAgent(user);
     }
 
