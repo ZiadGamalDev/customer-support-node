@@ -82,6 +82,9 @@ const messageSockets = (socket, io) => {
       // Emit message to chat room
       socket.to(chatId).emit("messageReceived", { message });
 
+      // Emit messageDelivered event to sender
+      socket.emit("messageDelivered", { message });
+
       console.log("Message saved and delivered", {
         messageId: message._id,
         chatId,
