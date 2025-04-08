@@ -31,22 +31,29 @@ class MessageService {
       }
       await chat.save();
 
-      return message;
+      return await Message.findById(message._id)
+        .populate('senderId', 'name email')
+        .populate('receiverId', 'name email')
+        .lean();
     } catch (error) {
       throw new Error(`Failed to create message: ${error.message}`);
     }
   }
 
   async updateStatus(messageId, status) {
-    return await Message.findByIdAndUpdate(messageId, { status }, { new: true });
+    const updatedMessage = await Message.findByIdAndUpdate(messageId, { status }, { new: true })
+      .populate('senderId', 'name email')
+      .populate('receiverId', 'name email')
+      .lean();
+    return updatedMessage;
   }
 
   async isFirstReply(chat) {
-    return chat.status == statuses.OPEN
+    return chat.status == statuses.OPEN;
   }
 
   async handleFirstReply(chat) {
-    chat.status = statuses.IN_PROGRESS
+    chat.status = statuses.IN_PROGRESS;
     await chat.save();
   }
 }
