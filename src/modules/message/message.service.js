@@ -13,11 +13,14 @@ class MessageService {
       .lean();
   }
 
+  async isFirstMessage(chat) {
+    return ! await Message.exists({ chatId: chat._id });
+  }
+
   async create(chatId, senderId, content) {
-    console.log("senderId from message creation:", senderId);
     try {
       const chat = await Chat.findById(chatId);
-      console.log("chat in message creation ", chat);
+
       if (!chat) {
         throw new Error("Chat not found");
       } else if (chat.status == statuses.RESOLVED) {

@@ -1,8 +1,6 @@
 import User from '../../database/models/user.model.js';
 import jwt from 'jsonwebtoken';
 import { hash, compare } from '../../utils/crypto.js';
-import { statuses } from '../../database/enums/user.enum.js';
-import updateStatus from '../../services/status.js';
 
 class AuthService {
     async create(name, email, password) {
@@ -25,10 +23,6 @@ class AuthService {
         }
 
         return user;
-    }
-
-    async logout(user) {
-        await updateStatus.agent(user, statuses.AWAY);
     }
 }
 

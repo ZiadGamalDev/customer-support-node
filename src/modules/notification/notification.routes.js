@@ -2,8 +2,6 @@ import { Router } from "express";
 import NotificationController from "./notification.controller.js";
 import authenticate from "../../middleware/authenticate.js";
 
-
-
 const notificationRoutes = Router();
 
 // Get user's notifications
@@ -24,7 +22,6 @@ notificationRoutes.get(
 notificationRoutes.put(
   "/:notificationId/read",
   authenticate(),
-  
   NotificationController.markAsRead
 );
 
@@ -39,7 +36,6 @@ notificationRoutes.put(
 notificationRoutes.delete(
   "/:notificationId",
   authenticate(),
-
   NotificationController.deleteNotification
 );
 

@@ -96,22 +96,17 @@ export async function _assignChatToAgent(chat, agent) {
 
 export async function _notifyAgent(chat, type) {
   const notification = await notificationService.createChatNotification(chat, type);
-  _emitAssignNotificationToAgent(chat.agentId, notification);
+  _emitAssignNotificationToAgent(chat, notification);
 }
 
-export async function _emitAssignNotificationToAgent(agentId, notification) {
+export async function _emitAssignNotificationToAgent(chat, notification) {
   try {
     const io = global.io;
+    console.log("_emitAssignNotificationToAgent/io:", io);
     if (!io) return;
 
-    const agentSockets = [...io.sockets.sockets.values()].filter(
-      (socket) => socket.userId === agentId.toString()
-    );
+    io.to(chat._id).emit("chatNotified", notification);
 
-    agentSockets.forEach((socket) => {
-      socket.emit("notification", notification);
-      socket.emit("chatAssigned", chat._id);
-    });
   } catch (error) {
     console.error("Failed to emit notification to agent:", error);
   }

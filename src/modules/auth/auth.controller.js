@@ -1,6 +1,8 @@
 import AuthService from './auth.service.js';
 import EmailService from '../email/email.service.js';
 import authResponse from './auth.response.js';
+import updateStatus from '../../services/status.js';
+import { statuses } from '../../database/enums/user.enum.js';
 
 class AuthController {
     async register(req, res, next) {
@@ -33,7 +35,7 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
-            await AuthService.logout(req.user);
+            await updateStatus.agent(user, statuses.AWAY);
             
             res.status(200).json({ message: 'Logged out successfully' });
         } catch (err) {

@@ -37,18 +37,12 @@ class ChatService {
   async findOrCreate(customer) {
     let chat = await Chat.findOne({ customerId: customer._id });
     let agent;
-    let notificationType = "new";
 
     if (chat) {
-      if (chat.status === statuses.RESOLVED) {
+      if (await this.isChatConsideredNew(chat)) {
         agent = await _findNewAgent(chat);
-        notificationType = "resumed";
-      } else if (chat.status == statuses.PENDING) {
-        agent = await _findNewAgent(chat);
-        notificationType = "new";
       } else {
         agent = await _findExistingAgent(chat);
-        return { ...chat.toObject(), customer, agent };
       }
     } else {
       chat = await Chat.create({
@@ -56,7 +50,6 @@ class ChatService {
         title: `Chat with ${customer.username}`,
       });
       agent = await _findNewAgent(chat);
-      notificationType = "new";
     }
 
     const lastMessage = await Message.findById(chat.lastMessageId);
@@ -87,6 +80,10 @@ class ChatService {
       role === roles.AGENT ? { _id: chatId, agentId: userId } : { _id: chatId };
 
     return Chat.findOneAndUpdate(condition, update, { new: true });
+  }
+
+  async isChatConsideredNew(chat) {
+    return chat.status === statuses.PENDING || chat.status === statuses.RESOLVED;
   }
 }
 
