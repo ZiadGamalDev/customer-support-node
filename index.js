@@ -5,6 +5,8 @@ import resourceSockets from "./src/resource/sockets.js";
 import { Server } from "socket.io";
 import authenticateSocket from "./src/middleware/authenticate.socket.js";
 import NotificationScheduler from "./src/utils/notification.schedule.js";
+import NotificationService from "./src/modules/notification/notification.service.js";
+import mongoose from "mongoose";
 
 dotenv.config();
 connectDB();
@@ -20,12 +22,31 @@ const io = new Server(server, { cors: "*" });
 global.io = io;
 // io.use(authenticateSocket);
 io.on("connection", (socket) => {
-  resourceSockets(socket, io);
-  // Authenticate user and set socket.userId
-  socket.on("authenticate", (data) => {
-    const userId = data.userId;
-    socket.userId = userId;
+  console.log("New socket connection:", socket.id);
+
+  socket.on("authenticate", async (data) => {
+    try {
+      const userId = data.userId;
+
+      // Validate userId is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw new Error("Invalid user ID format");
+      }
+
+      socket.userId = userId;
+      console.log(`Socket ${socket.id} authenticated for user ${userId}`);
+
+      await NotificationService.emitUserNotifications(userId);
+    } catch (error) {
+      console.error("Authentication error:", error);
+      socket.emit("error", {
+        message: "Authentication failed",
+        details: error.message,
+      });
+    }
   });
+
+  resourceSockets(socket, io);
 });
 
 process.on("SIGTERM", () => {
