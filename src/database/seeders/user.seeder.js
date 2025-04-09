@@ -8,7 +8,6 @@ const date = new Date();
 const users = [
     {
         role: roles.ADMIN,
-        status: statuses.ONLINE,
         name: 'Admin',
         email: 'admin@example.com',
         password: password,
@@ -17,7 +16,6 @@ const users = [
     },
     {
         role: roles.USER,
-        status: statuses.ONLINE,
         name: 'User',
         email: 'user@example.com',
         password: password,
@@ -26,7 +24,7 @@ const users = [
     },
     {
         role: roles.AGENT,
-        status: statuses.ONLINE,
+        status: statuses.AVAILABLE,
         name: 'Ziad Gamal',
         email: 'ziadgamal@example.com',
         password: password,
@@ -35,7 +33,7 @@ const users = [
     },
     {
         role: roles.AGENT,
-        status: statuses.ONLINE,
+        status: statuses.AVAILABLE,
         name: 'Sara Khaled',
         email: 'sarakhaled@example.com',
         password: password,
@@ -44,7 +42,6 @@ const users = [
     },
     {
         role: roles.AGENT,
-        status: statuses.ONLINE,
         name: 'Ahmed Frag',
         email: 'ahmedfrag@example.com',
         password: password,

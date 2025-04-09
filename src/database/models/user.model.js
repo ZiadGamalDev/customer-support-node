@@ -8,6 +8,11 @@ const userSchema = new Schema({
         enum: Object.values(roles),
         default: roles.USER,
     },
+    status: {
+        type: String,
+        enum: Object.values(statuses),
+        default: statuses.AWAY,
+    },
     name: {
         type: String,
         required: true,
@@ -36,11 +41,6 @@ const userSchema = new Schema({
     age: {
         type: Number,
         trim: true,
-    },
-    status: {
-        type: String,
-        enum: Object.values(statuses),
-        default: statuses.ONLINE,
     },
     chatsCount: {
         type: Number,

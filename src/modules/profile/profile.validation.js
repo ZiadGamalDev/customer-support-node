@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { statuses } from '../../database/enums/user.enum.js';
+import { userStatusesByAgent } from '../../database/enums/user.enum.js';
 
 class ProfileValidation {
     updateProfile({ body }) {
@@ -16,18 +16,18 @@ class ProfileValidation {
     }
 
     async updateStatus({ params }) {
-        const validStatuses = Object.values(statuses);
-  
+        const validStatuses = Object.values(userStatusesByAgent);
+
         const schema = Joi.object({
             status: Joi.string().valid(...validStatuses).required().messages({
                 'any.required': 'Status is required',
                 'any.only': 'Status must be one of: ' + validStatuses.join(', '),
             }),
         });
-  
+
         const { error } = schema.validate(params, { abortEarly: false });
         if (error) return { error };
-    
+
         return {};
     }
 }

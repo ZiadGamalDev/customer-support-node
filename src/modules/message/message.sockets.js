@@ -1,7 +1,6 @@
 import ChatService from "../chat/chat.service.js";
 import MessageService from "./message.service.js";
 import NotificationService from "../notification/notification.service.js";
-import UserService from "../user/user.service.js";
 
 const messageSockets = (socket, io) => {
   console.log("New socket connection", { socketId: socket.id });
@@ -128,26 +127,6 @@ const messageSockets = (socket, io) => {
     } catch (err) {
       console.error("Notification read error", { error: err.message });
       socket.emit("error", { message: "Failed to mark notification as read" });
-    }
-  });
-
-  //  event to handle agent availability status
-  //IMPORTANT
-  socket.on("updateAgentStatus", async ({ status }) => {
-    try {
-      if (!socket.userId || socket.userType !== "AGENT") {
-        throw new Error("Not authorized or not an agent");
-      }
-
-      await UserService.updateAgentStatus(socket.userId, status);
-
-      console.log("Agent status updated", {
-        agentId: socket.userId,
-        status,
-      });
-    } catch (err) {
-      console.error("Agent status update error", { error: err.message });
-      socket.emit("error", { message: "Failed to update agent status" });
     }
   });
 

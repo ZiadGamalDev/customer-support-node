@@ -1,9 +1,6 @@
-import { statuses } from "../../database/enums/user.enum.js";
 import User from "../../database/models/user.model.js";
 import file from "../../utils/file.js";
-import ChatService from "../chat/chat.service.js";
-import UserService from "../user/user.service.js";
-import NotificationService from "../notification/notification.service.js";
+import updateStatus from "../../services/status.js";
 
 class ProfileService {
   async update({ user, body: data, file: image }) {
@@ -26,37 +23,9 @@ class ProfileService {
 
     if (!user) throw new Error("User not found");
 
-    user.status = status;
-    await user.save();
-
-    if (status == statuses.AWAY) {
-      this.handleAwayAgent(user);
-    }
+    await updateStatus.agent(user, status);
 
     return user;
-  }
-
-  async handleAwayAgent(agent) {
-    agent.status = statuses.AWAY;
-    agent.chatsCount = 0;
-    await agent.save();
-
-    const chats = await ChatService.all(agent._id);
-    for (const chat of chats) {
-      await ChatService.awayAgent(chat);
-      const availableAgent = await UserService.findAvailableAgent();
-      await ChatService.reAssignAgent(chat, availableAgent);
-
-      // Create and emit notification for the new agent
-      const notification = await NotificationService.createChatNotification(
-        {
-          ...chat.toObject(),
-          customer: await UserService.findById(chat.customerId),
-        },
-        "reassigned"
-      );
-      ChatService.emitNotificationToAgent(availableAgent._id, notification);
-    }
   }
 }
 

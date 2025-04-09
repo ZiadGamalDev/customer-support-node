@@ -5,7 +5,7 @@ import { roles } from "../../database/enums/user.enum.js";
 class ChatController {
   async all(req, res, next) {
     try {
-      const chats = await ChatService.all(req.user.id);
+      const chats = await ChatService.agentChats(req.user.id);
 
       res.status(200).json(chats.map(chat => chatResponse(chat)));
     } catch (err) {
@@ -45,7 +45,7 @@ class ChatController {
 
   async agentUpdateStatus(req, res, next) {
     try {
-      const chat = await ChatService.updateStatus(req.user.id, req.params.chatId, req.params.status, roles.AGENT);
+      const chat = await ChatService.updateStatus(req.user.id, req.params.chatId, req.params.status);
 
       res.status(200).json(chatResponse(chat));
     } catch (err) {

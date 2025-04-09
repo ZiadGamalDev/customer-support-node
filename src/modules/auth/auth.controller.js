@@ -24,7 +24,6 @@ class AuthController {
 
             const user = await AuthService.validateCredentials(email, password);
             const token = await AuthService.generateToken(user);
-            await AuthService.login(user);
 
             res.status(200).json(authResponse(user, token));
         } catch (err) {

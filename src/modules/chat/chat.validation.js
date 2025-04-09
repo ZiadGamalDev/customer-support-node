@@ -1,8 +1,7 @@
 import Joi from 'joi';
-import User from '../../database/models/user.model.js';
 import Chat from '../../database/models/chat.model.js';
 import { objectId } from '../../utils/validators.js';
-import { statuses } from '../../database/enums/chat.enum.js';
+import { chatStatusesByAgent } from '../../database/enums/chat.enum.js';
 
 class ChatValidation {
   async resetUnreadCount({ params }) {
@@ -22,7 +21,7 @@ class ChatValidation {
   }
 
   async updateStatus({ params }) {
-      const validStatuses = Object.values(statuses);
+      const validStatuses = Object.values(chatStatusesByAgent);
 
       const schema = Joi.object({
           chatId: objectId.required().messages({ 'any.required': 'Chat ID is required' }),

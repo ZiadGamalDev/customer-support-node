@@ -23,28 +23,11 @@ class UserService {
   }
 
   async findAvailableAgent() {
-    let agent = await User.findOne({ role: roles.AGENT, status: statuses.ONLINE });
+    let agent = await User.findOne({ role: roles.AGENT, status: statuses.AVAILABLE });
 
     if (!agent) {
       agent = await User.findOne({ role: roles.AGENT, status: statuses.BUSY, chatsCount: { $lt: 3 } });
     }
-
-    if (!agent) {
-      throw new Error("No agents available");
-    }
-
-    this.updateAgentStatus(agent, statuses.BUSY);
-
-    return agent;
-  }
-
-  async updateAgentStatus(agent, status) {
-    if (!Object.values(statuses).includes(status)) {
-      throw new Error("Invalid status value");
-    }
-
-    agent.status = status;
-    await agent.save();
 
     return agent;
   }

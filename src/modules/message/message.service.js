@@ -2,6 +2,7 @@ import Message from "../../database/models/message.model.js";
 import Chat from "../../database/models/chat.model.js";
 import { roles } from "../../database/enums/user.enum.js";
 import { statuses } from "../../database/enums/chat.enum.js";
+import { _findNewAgent } from "../../services/helpers.js";
 
 class MessageService {
   async all(chatId) {
@@ -15,6 +16,15 @@ class MessageService {
   async create(chatId, senderId, content) {
     try {
       const chat = await Chat.findById(chatId);
+
+      if (!chat) {
+        throw new Error("Chat not found");
+      } else if (chat.status == statuses.RESOLVED) {
+        await _findNewAgent(chat);
+      } else if (chat.status == statuses.PENDING) {
+        await _findNewAgent(chat);
+      }
+
       const senderRole = chat.agentId.equals(senderId) ? roles.AGENT : roles.CUSTOMER;
       const receiverId = senderRole == roles.AGENT ? chat.customerId : chat.agentId;
       const message = await Message.create({ chatId, senderId, receiverId, content, senderRole });
@@ -22,10 +32,6 @@ class MessageService {
       chat.lastMessageId = message._id;
       if (senderRole == roles.AGENT) {
         chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
-
-        if (this.isFirstReply(chat)) {
-          await this.handleFirstReply(chat);
-        }
       } else {
         chat.customerUnreadCount = (chat.customerUnreadCount || 0) + 1;
       }
@@ -46,15 +52,6 @@ class MessageService {
       .populate('receiverId', 'name email')
       .lean();
     return updatedMessage;
-  }
-
-  async isFirstReply(chat) {
-    return chat.status == statuses.OPEN;
-  }
-
-  async handleFirstReply(chat) {
-    chat.status = statuses.IN_PROGRESS;
-    await chat.save();
   }
 }
 
