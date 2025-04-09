@@ -12,6 +12,7 @@ const messageSockets = (socket, io) => {
       }
 
       const userId = await ChatService.findChatUserIdByRole(chatId, userType);
+      console.log("userId from chatId", userId);
 
       socket.join(chatId);
       socket.chatId = chatId.toString();
@@ -59,7 +60,11 @@ const messageSockets = (socket, io) => {
         socket.userId,
         content
       );
+      console.log("message createddd", message);
+
       const chat = await ChatService.findById(chatId);
+
+      console.log("chat before create message noti", chat);
 
       // Create notification
       const notification = await NotificationService.createMessageNotification(
@@ -101,34 +106,6 @@ const messageSockets = (socket, io) => {
     }
   });
 
-  socket.on("markNotificationRead", async ({ notificationId }) => {
-    try {
-      if (!socket.userId) {
-        throw new Error("User not authenticated");
-      }
-
-      await NotificationService.markAsRead(notificationId, socket.userId);
-
-      // Emit to all connections of this user to keep multiple devices in sync
-      const userSockets = [...io.sockets.sockets.values()].filter(
-        (s) => s.userId === socket.userId
-      );
-
-      userSockets.forEach((userSocket) => {
-        if (userSocket.id !== socket.id) {
-          userSocket.emit("notificationRead", { notificationId });
-        }
-      });
-
-      console.log("Notification marked as read", {
-        notificationId,
-        userId: socket.userId,
-      });
-    } catch (err) {
-      console.error("Notification read error", { error: err.message });
-      socket.emit("error", { message: "Failed to mark notification as read" });
-    }
-  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected", {

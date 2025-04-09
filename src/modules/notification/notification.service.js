@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 class NotificationService {
   async createMessageNotification(message, chat) {
     try {
+
+      console.log(chat)
       const role = message.senderId.equals(chat.agentId)
         ? roles.AGENT
         : roles.CUSTOMER;
@@ -41,8 +43,10 @@ class NotificationService {
           $inc: { agentUnreadCount: 1 },
         });
       }
-
+      console.log('noti created..', notification)
       return notification;
+
+      
     } catch (error) {
       throw new Error(`Failed to create notification: ${error.message}`);
     }
@@ -93,6 +97,7 @@ class NotificationService {
         offset = 0,
         read,
         sort = { createdAt: -1 },
+        
       } = options;
 
       // Create a new ObjectId instance
@@ -216,7 +221,7 @@ class NotificationService {
   }
 
   // Add this method to emit notifications to a specific user
-  async emitUserNotifications(userId) {
+  async emitUserNotifications(userId, options = {}) {
     try {
       const io = global.io;
       if (!io) {
@@ -229,8 +234,10 @@ class NotificationService {
         throw new Error("Invalid user ID format");
       }
 
+      // Pass options to getUserNotifications
       const { notifications, pagination } = await this.getUserNotifications(
-        userId
+        userId,
+        options
       );
       const unreadCount = await this.getUnreadCount(userId);
 
@@ -239,11 +246,13 @@ class NotificationService {
       );
 
       console.log(`Found ${userSockets.length} sockets for user ${userId}`);
+      console.log('Emitting with options:', options);
 
       const payload = {
         notifications,
         pagination,
         unreadCount,
+        options // Include options in payload for client reference
       };
 
       userSockets.forEach((socket) => {

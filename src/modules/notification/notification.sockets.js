@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import NotificationService from "./notification.service.js";
 
 const notificationSockets = (socket, io) => {
+
+  
   console.log(`Setting up notification sockets for user ${socket.userId}`);
 
   socket.on("fetchNotifications", async (options = {}) => {
@@ -15,14 +17,15 @@ const notificationSockets = (socket, io) => {
       }
 
       console.log(`Fetching notifications for user ${socket.userId}`, options);
-      await NotificationService.emitUserNotifications(socket.userId);
+      // Pass the options to emitUserNotifications
+      await NotificationService.emitUserNotifications(socket.userId, options);
     } catch (error) {
       console.error("Fetch notifications error:", error);
       socket.emit("error", {
         message: "Failed to fetch notifications",
         details: error.message,
       });
-    }
+    } 1523
   });
 
   // Mark notification as read

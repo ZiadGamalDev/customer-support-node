@@ -9,7 +9,7 @@ import {
   _findNewAgent,
   _notifyAgent,
 } from "../../services/helpers.js";
-import ChatNotificationHandler from "./chat.notification.js";
+
 
 class ChatService {
   async agentChats(agentId) {
@@ -58,13 +58,6 @@ class ChatService {
       agent = await _findNewAgent(chat);
       notificationType = "new";
     }
-
-    // Notify agent after assignment
-    await ChatNotificationHandler.notifyAgentChatAssigned(
-      chat,
-      customer,
-      notificationType
-    );
 
     const lastMessage = await Message.findById(chat.lastMessageId);
     return { ...chat.toObject(), customer, agent, lastMessage };
