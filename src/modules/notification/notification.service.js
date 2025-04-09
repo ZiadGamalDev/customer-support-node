@@ -129,6 +129,7 @@ class NotificationService {
       throw new Error(`Failed to get unread count: ${error.message}`);
     }
   }
+  
 
   async markAsRead(notificationId, userId) {
     try {
