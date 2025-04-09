@@ -41,8 +41,8 @@ const resourceSockets = (socket, io) => {
       } 
       
       if (await MessageService.isFirstMessage(chat) || await ChatService.isChatConsideredNew(chat)) {
-        socket.to(chatId).emit("chatCreated", { chatId });
-        console.log("Chat created", { chatId }); 
+        socket.to(chat.agentId?.toString()).emit("chatCreated", { chatId });
+        console.log("Chat created and sent to agent room", { chatId, agentId });
       }
 
       const message = await MessageService.create(chatId, socket.userId, content);
