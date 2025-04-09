@@ -8,15 +8,16 @@ class MessageService {
   async all(chatId) {
     return await Message.find({ chatId })
       .sort({ createdAt: 1 })
-      .populate('senderId', 'name email')
-      .populate('receiverId', 'name email')
+      .populate("senderId", "name email")
+      .populate("receiverId", "name email")
       .lean();
   }
 
   async create(chatId, senderId, content) {
+    console.log("senderId from message creation:", senderId);
     try {
       const chat = await Chat.findById(chatId);
-
+      console.log("chat in message creation ", chat);
       if (!chat) {
         throw new Error("Chat not found");
       } else if (chat.status == statuses.RESOLVED) {
@@ -25,9 +26,18 @@ class MessageService {
         await _findNewAgent(chat);
       }
 
-      const senderRole = chat.agentId.equals(senderId) ? roles.AGENT : roles.CUSTOMER;
-      const receiverId = senderRole == roles.AGENT ? chat.customerId : chat.agentId;
-      const message = await Message.create({ chatId, senderId, receiverId, content, senderRole });
+      const senderRole = chat.agentId.equals(senderId)
+        ? roles.AGENT
+        : roles.CUSTOMER;
+      const receiverId =
+        senderRole == roles.AGENT ? chat.customerId : chat.agentId;
+      const message = await Message.create({
+        chatId,
+        senderId,
+        receiverId,
+        content,
+        senderRole,
+      });
 
       chat.lastMessageId = message._id;
       if (senderRole == roles.AGENT) {
@@ -38,8 +48,8 @@ class MessageService {
       await chat.save();
 
       return await Message.findById(message._id)
-        .populate('senderId', 'name email')
-        .populate('receiverId', 'name email')
+        .populate("senderId", "name email")
+        .populate("receiverId", "name email")
         .lean();
     } catch (error) {
       throw new Error(`Failed to create message: ${error.message}`);
@@ -47,9 +57,13 @@ class MessageService {
   }
 
   async updateStatus(messageId, status) {
-    const updatedMessage = await Message.findByIdAndUpdate(messageId, { status }, { new: true })
-      .populate('senderId', 'name email')
-      .populate('receiverId', 'name email')
+    const updatedMessage = await Message.findByIdAndUpdate(
+      messageId,
+      { status },
+      { new: true }
+    )
+      .populate("senderId", "name email")
+      .populate("receiverId", "name email")
       .lean();
     return updatedMessage;
   }
