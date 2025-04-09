@@ -5,6 +5,21 @@ import NotificationService from "../modules/notification/notification.service.js
 const resourceSockets = (socket, io) => {
   console.log("New socket connection:", socket.id);
 
+  socket.on("joinNotification", async (agentId) => {
+    try {
+      if (!agentId) {
+        throw new Error("Agent ID is required");
+      }
+
+      socket.join(agentId.toString());
+
+      console.log("Agent joined notification room", { agentId });
+    } catch (err) {
+      console.error("Join notification error", { error: err.message });
+      socket.emit("error", { message: "Failed to join notification room" });
+    }
+  });
+
   socket.on("joinChat", async ({ chatId, userType }) => {
     try {
       if (!chatId || !userType) {
@@ -41,7 +56,8 @@ const resourceSockets = (socket, io) => {
       } 
       
       if (await MessageService.isFirstMessage(chat) || await ChatService.isChatConsideredNew(chat)) {
-        socket.to(chat.agentId?.toString()).emit("chatCreated", { chatId });
+        const agentId = chat.agentId?.toString();
+        socket.to(agentId).emit("chatCreated", { chatId });
         console.log("Chat created and sent to agent room", { chatId, agentId });
       }
 
