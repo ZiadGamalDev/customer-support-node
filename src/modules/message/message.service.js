@@ -27,6 +27,8 @@ class MessageService {
         await _findNewAgent(chat);
       } else if (chat.status == statuses.PENDING) {
         await _findNewAgent(chat);
+      } else if (await this.isFirstMessage(chat)) {
+        await _notifyChatCreated(chat);
       }
 
       const senderRole = chat.agentId.equals(senderId)

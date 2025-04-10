@@ -5,6 +5,7 @@ import resourceSockets from "./src/resource/sockets.js";
 import { Server } from "socket.io";
 import authenticateSocket from "./src/middleware/authenticate.socket.js";
 import NotificationScheduler from "./src/utils/notification.schedule.js";
+import { setSocketIO } from "./src/utils/socket.js";
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ const io = new Server(server, { cors: "*" });
 global.io = io;
 // io.use(authenticateSocket);
 io.on("connection", (socket) => { resourceSockets(socket, io) });
+setSocketIO(io);
 
 process.on("SIGTERM", () => {
   console.log("SIGTERM signal received: closing HTTP server");

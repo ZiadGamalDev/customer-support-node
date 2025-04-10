@@ -39,7 +39,9 @@ class ChatService {
     let agent;
 
     if (chat) {
-      if (await this.isChatConsideredNew(chat)) {
+      if (await chat.status == statuses.RESOLVED) {
+        agent = await _findNewAgent(chat);
+      } else if (await chat.status == statuses.PENDING) {
         agent = await _findNewAgent(chat);
       } else {
         agent = await _findExistingAgent(chat);
@@ -80,10 +82,6 @@ class ChatService {
       role === roles.AGENT ? { _id: chatId, agentId: userId } : { _id: chatId };
 
     return Chat.findOneAndUpdate(condition, update, { new: true });
-  }
-
-  async isChatConsideredNew(chat) {
-    return chat.status === statuses.PENDING || chat.status === statuses.RESOLVED;
   }
 }
 

@@ -51,16 +51,6 @@ const resourceSockets = (socket, io) => {
       const chat = await ChatService.findById(chatId);
       console.log("Chat retrieved", chat);
 
-      if (! chat) {
-        throw new Error("Chat not found");
-      } 
-      
-      if (await MessageService.isFirstMessage(chat) || await ChatService.isChatConsideredNew(chat)) {
-        const agentId = chat.agentId?.toString();
-        socket.to(agentId).emit("chatCreated", { chatId });
-        console.log("Chat created and sent to agent room", { chatId, agentId });
-      }
-
       const message = await MessageService.create(chatId, socket.userId, content);
       console.log("Message created", message);
 

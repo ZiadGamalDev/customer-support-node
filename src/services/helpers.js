@@ -3,6 +3,7 @@ import { userStatusesByAgent, userStatusesBySystem } from "../database/enums/use
 import ChatService from "../modules/chat/chat.service.js";
 import notificationService from "../modules/notification/notification.service.js";
 import UserService from "../modules/user/user.service.js";
+import { getSocketIO } from "../utils/socket.js";
 
 /**************************  ***************************/
 
@@ -89,10 +90,19 @@ export async function _assignChatToAgent(chat, agent) {
   agent.status = userStatusesBySystem.BUSY;
   agent.chatsCount = (agent.chatsCount || 0) + 1;
   await agent.save();
+  _notifyChatCreated(chat);
   _notifyAgent(chat, "reassigned");
 }
 
 /**************************  ***************************/
+
+export async function _notifyChatCreated(chat) {
+  const io = getSocketIO();
+  const agentId = chat.agentId?.toString();
+  console.log("_notifyAgent/chat:", chat._id);
+  console.log("_notifyAgent/agent:", agentId);
+  io.to(agentId).emit("chatCreated", chat);
+}
 
 export async function _notifyAgent(chat, type) {
   const notification = await notificationService.createChatNotification(chat, type);
