@@ -22,14 +22,14 @@ chatRoutes.post(
 chatRoutes.put(
   '/agent/read/:chatId',
   authenticate(roles.AGENT),
-  validate(chatValidation.resetUnreadCount),
+  validate(chatValidation.chatExists),
   ChatController.agentResetUnreadCount
 );
 
 chatRoutes.put(
   '/customer/read/:chatId',
   authenticate(roles.CUSTOMER),
-  validate(chatValidation.resetUnreadCount),
+  validate(chatValidation.chatExists),
   ChatController.customerResetUnreadCount
 );
 
@@ -38,6 +38,13 @@ chatRoutes.put(
   authenticate(roles.AGENT),
   validate(chatValidation.updateStatus),
   ChatController.agentUpdateStatus
+);
+
+chatRoutes.get(
+  '/agent/show/:chatId',
+  // authenticate(roles.AGENT),
+  validate(chatValidation.chatExists),
+  ChatController.show
 );
 
 export default chatRoutes;

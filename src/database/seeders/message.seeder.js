@@ -1,4 +1,4 @@
-import Message from "../models/chat.model.js";
+import Message from "../models/message.model.js";
 
 const messageSeeder = async () => {
     try {

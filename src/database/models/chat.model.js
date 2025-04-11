@@ -30,7 +30,7 @@ const chatSchema = new Schema(
     status: {
       type: String,
       enum: Object.values(statuses),
-      default: statuses.OPEN,
+      default: statuses.NEW,
       index: true,
     },
     priority: {

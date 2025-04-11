@@ -12,7 +12,7 @@ class AuthService {
     }
 
     async generateToken(user) {
-        return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_Token_EXPIRY });
+        return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_Token_EXPIRY });
     }
 
     async validateCredentials(email, password) {

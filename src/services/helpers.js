@@ -1,6 +1,7 @@
 import { chatStatusesByAgent, chatStatusesBySystem } from "../database/enums/chat.enum.js";
 import { userStatusesByAgent, userStatusesBySystem } from "../database/enums/user.enum.js";
 import ChatService from "../modules/chat/chat.service.js";
+import MessageService from "../modules/message/message.service.js";
 import notificationService from "../modules/notification/notification.service.js";
 import UserService from "../modules/user/user.service.js";
 import { getSocketIO } from "../utils/socket.js";
@@ -57,7 +58,7 @@ export async function _makeAgentAvailable(agent) {
   agent.status = userStatusesByAgent.AVAILABLE;
   agent.chatsCount = 0;
   await agent.save();
-  const chat = await ChatService.findPendingChat()
+  const chat = await ChatService.findChatReadyToOpen()
   if (chat) await _assignChatToAgent(chat, agent);
 }
 
@@ -82,26 +83,32 @@ export async function _findExistingAgent(chat) {
 /**************************  ***************************/
 
 export async function _assignChatToAgent(chat, agent) {
+  // Assign Chat
   console.log("_assignChatToAgent/chat:", chat._id);
-  console.log("_assignChatToAgent/agent:", agent._id);
   chat.agentId = agent._id;
   chat.status = chatStatusesBySystem.OPEN;
   await chat.save();
+  // Assign Messages
+  await MessageService.assignUnassignedMessages(chat._id, agent._id);
+  // Assign Agent
+  console.log("_assignChatToAgent/agent:", agent._id);
   agent.status = userStatusesBySystem.BUSY;
   agent.chatsCount = (agent.chatsCount || 0) + 1;
   await agent.save();
-  _notifyChatCreated(chat);
+  // Notify Agent
   _notifyAgent(chat, "reassigned");
 }
 
 /**************************  ***************************/
 
 export async function _notifyChatCreated(chat) {
-  const io = getSocketIO();
-  const agentId = chat.agentId?.toString();
-  console.log("_notifyAgent/chat:", chat._id);
-  console.log("_notifyAgent/agent:", agentId);
-  io.to(agentId).emit("chatCreated", chat);
+  console.log('_notifyChatCreated/chat:', chat._id);
+  if (chat.agentId) {
+    const io = getSocketIO();
+    const agentId = chat.agentId.toString();
+    io.to(agentId).emit("chatCreated", chat);
+    console.log("_notifyChatCreated/agent:", agentId);
+  }
 }
 
 export async function _notifyAgent(chat, type) {
@@ -112,11 +119,9 @@ export async function _notifyAgent(chat, type) {
 export async function _emitAssignNotificationToAgent(chat, notification) {
   try {
     const io = global.io;
-    console.log("_emitAssignNotificationToAgent/io:", io);
     if (!io) return;
 
     io.to(chat._id).emit("chatNotified", notification);
-
   } catch (error) {
     console.error("Failed to emit notification to agent:", error);
   }

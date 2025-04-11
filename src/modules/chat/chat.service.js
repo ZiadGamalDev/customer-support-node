@@ -22,10 +22,14 @@ class ChatService {
     return chat;
   }
 
-  async findPendingChat() {
-    return await Chat.findOne({ status: statuses.PENDING }).sort({
+  async findChatReadyToOpen() {
+    return await Chat.findOne({ status: { $in: [statuses.NEW, statuses.PENDING, statuses.RESOLVED] } }).sort({
       createdAt: 1,
     });
+  }
+
+  async isChatReadyToOpen(chat) {
+    return await chat.status == statuses.NEW || chat.status == statuses.PENDING || chat.status == statuses.RESOLVED;
   }
 
   async findChatUserIdByRole(chatId, role) {
@@ -39,9 +43,7 @@ class ChatService {
     let agent;
 
     if (chat) {
-      if (await chat.status == statuses.RESOLVED) {
-        agent = await _findNewAgent(chat);
-      } else if (await chat.status == statuses.PENDING) {
+      if (await this.isChatReadyToOpen(chat)) {
         agent = await _findNewAgent(chat);
       } else {
         agent = await _findExistingAgent(chat);

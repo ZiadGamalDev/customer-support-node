@@ -52,6 +52,16 @@ class ChatController {
       next(err);
     }
   }
+
+  async show(req, res, next) {
+    try {
+      const chat = await ChatService.findById(req.params.chatId);
+
+      res.status(200).json(chatResponse(chat));
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new ChatController();

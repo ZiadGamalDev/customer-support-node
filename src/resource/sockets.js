@@ -49,19 +49,21 @@ const resourceSockets = (socket, io) => {
       }
 
       const chat = await ChatService.findById(chatId);
-      console.log("Chat retrieved", chat);
+      console.log("Chat retrieved", chat._id);
 
       const message = await MessageService.create(chatId, socket.userId, content);
-      console.log("Message created", message);
-
-      socket.to(chatId).emit("messageReceived", { message });
-      console.log("Message sent to receiver", { chatId, message });
+      console.log("Message created", message._id);
 
       socket.emit("messageDelivered", { message });
-      console.log("Message delivered to sender", { message });
+      console.log("Message delivered to sender", message._id);
 
-      const notification = await NotificationService.createMessageNotification(message, chat);
-      console.log("Notification created", notification);
+      if (message.receiverId) {
+        socket.to(chatId).emit("messageReceived", { message });
+        console.log("Message sent to receiver", chatId, message._id);
+
+        const notification = await NotificationService.createMessageNotification(message, chat);
+        console.log("Notification created", notification._id);
+      }
     } catch (err) {
       console.error("Message error", { error: err.message, chatId});
       socket.emit("error", { message: "Failed to send message", error: err.message });
