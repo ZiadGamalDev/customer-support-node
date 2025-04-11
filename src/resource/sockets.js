@@ -57,7 +57,7 @@ const resourceSockets = (socket, io) => {
       socket.emit("messageDelivered", { message });
       console.log("Message delivered to sender", message._id);
 
-      if (message.receiverId) {
+      if (chat.agentId) {
         socket.to(chatId).emit("messageReceived", { message });
         console.log("Message sent to receiver", chatId, message._id);
 
