@@ -1,41 +1,59 @@
-import PasswordService from './password.service.js';
+import PasswordService from "./password.service.js";
 
 class AuthController {
-    async forgot(req, res, next) {
-        try {
-            const { email } = req.body;
-            
-            await PasswordService.sendResetEmail(email);
+  async forgot(req, res, next) {
+    try {
+      const { email } = req.body;
 
-            res.status(200).json({ message: 'Password reset link sent to your email' });
-        } catch (err) {
-            next(err);
-        }
+      await PasswordService.sendResetEmail(email);
+
+      res
+        .status(200)
+        .json({ message: "Password reset link sent to your email" });
+    } catch (err) {
+      next(err);
     }
+  }
 
-    async reset(req, res, next) {
-        try {
-            const { email, otp, newPassword } = req.body;
-    
-            await PasswordService.reset(email, otp, newPassword);
-    
-            res.status(200).json({ message: 'Password reset successfully'});
-        } catch (err) {
-            next(err);
-        }
+  async reset(req, res, next) {
+    try {
+      const { email, otp, newPassword } = req.body;
+
+      await PasswordService.reset(email, otp, newPassword);
+
+      res.status(200).json({ message: "Password reset successfully" });
+    } catch (err) {
+      next(err);
     }
+  }
 
-    async confirm(req, res, next) {
-        try {
-            const { password } = req.body;
+  async confirm(req, res, next) {
+    try {
+      const { password } = req.body;
 
-            await PasswordService.confirm(req.user, password);
+      await PasswordService.confirm(req.user, password);
 
-            res.status(200).json({ message: 'Password confirmed successfully' });
-        } catch (err) {
-            next(err)
-        }
+      res.status(200).json({ message: "Password confirmed successfully" });
+    } catch (err) {
+      next(err);
     }
+  }
+
+  async updatePass(req, res, next) {
+    try {
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+      await PasswordService.updatePassword(
+        req.user,
+        oldPassword,
+        newPassword,
+        confirmPassword
+      );
+
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new AuthController();
