@@ -1,11 +1,11 @@
 import User from "../../database/models/user.model.js";
-import file from "../../utils/file.js";
+// import file from "../../utils/file.js";
 import updateStatus from "../../services/status.js";
-
+import uploadToCloudinary from "../../utils/file.js";
 class ProfileService {
   async update({ user, body: data, file: image }) {
     if (image) {
-      data.image = await file.store(image, "images/user");
+      data.image = await uploadToCloudinary(image, "images/user");
 
       if (user.image) {
         file.destroy(user.image.publicId);
@@ -17,6 +17,10 @@ class ProfileService {
 
     return user;
   }
+
+
+  
+
 
   async updateStatus(userId, status) {
     const user = await User.findById(userId);

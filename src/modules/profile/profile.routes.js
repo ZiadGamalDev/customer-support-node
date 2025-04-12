@@ -1,32 +1,28 @@
-import { Router } from 'express';
-import ProfileController from './profile.controller.js';
-import ProfileValidation from './profile.validation.js';
-import validate from '../../middleware/validate.js';
-import upload from '../../middleware/upload.js';
-import authenticate from '../../middleware/authenticate.js';
-import { roles } from '../../database/enums/user.enum.js';
+import { Router } from "express";
+import ProfileController from "./profile.controller.js";
+import ProfileValidation from "./profile.validation.js";
+import validate from "../../middleware/validate.js";
+import upload from "../../middleware/upload.js";
+import authenticate from "../../middleware/authenticate.js";
+import { roles } from "../../database/enums/user.enum.js";
 
 const profileRoutes = Router();
 
-profileRoutes.get(
-  '/', 
+profileRoutes.get("/", authenticate(), ProfileController.show);
+
+profileRoutes.put(
+  "/",
   authenticate(),
-  ProfileController.show,
+  // validate(ProfileValidation.updateProfile),
+  upload.single("image"),
+  ProfileController.update
 );
 
 profileRoutes.put(
-  '/', 
-  authenticate(),
-  validate(ProfileValidation.updateProfile), 
-  upload.single('image'), 
-  ProfileController.update,
-);
-
-profileRoutes.put(
-  '/agent/:status',
+  "/agent/:status",
   authenticate(roles.AGENT),
   validate(ProfileValidation.updateStatus),
-  ProfileController.agentUpdateStatus,
+  ProfileController.agentUpdateStatus
 );
 
 export default profileRoutes;
