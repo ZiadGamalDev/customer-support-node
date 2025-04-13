@@ -31,6 +31,22 @@ class UserService {
 
     return agent;
   }
+
+  async convertToAgent(email) {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    } else if (user.role === roles.AGENT) {
+      throw new Error("User is already an agent");
+    }
+
+    user.role = roles.AGENT;
+    user.status = statuses.AWAY;
+    await user.save();
+
+    return user;
+  }
 }
 
 export default new UserService();
