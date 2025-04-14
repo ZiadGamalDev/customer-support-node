@@ -23,6 +23,13 @@ userRoutes.get(
   UserController.show
 );
 
+userRoutes.post(
+  '/',
+  upload.single('image'), 
+  validate(UserValidation.create),
+  UserController.create
+);
+
 userRoutes.put(
   '/:id', 
   upload.single('image'), 

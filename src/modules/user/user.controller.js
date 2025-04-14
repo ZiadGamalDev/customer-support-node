@@ -24,6 +24,16 @@ class UserController {
         }
     }
 
+    async create(req, res, next) {
+        try {
+            const user = await UserService.create(req.body);
+
+            res.status(201).json(userResponse(user));
+        } catch (err) {
+            next(err);
+        }
+    }
+
     async update(req, res, next) {
         try {
             req.user = await User.findById(req.params.id);
