@@ -79,6 +79,10 @@ class MessageService {
       .lean();
     return updatedMessage;
   }
+
+  async deleteByChatId(chatId) {
+    return await Message.deleteMany({ chatId });
+  }
 }
 
 export default new MessageService();

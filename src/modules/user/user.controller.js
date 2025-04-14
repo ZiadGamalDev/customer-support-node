@@ -1,3 +1,4 @@
+import { roles } from '../../database/enums/user.enum.js';
 import User from '../../database/models/user.model.js';
 import userResponse from './user.response.js';
 import UserService from './user.service.js';
@@ -5,7 +6,7 @@ import UserService from './user.service.js';
 class UserController {
     async index(req, res, next) {
         try {
-            const users = await User.find();
+            const users = await User.find({ role: { $in: [roles.USER, roles.AGENT] } });
 
             res.status(200).json(users.map(userResponse));
         } catch (err) {
@@ -43,6 +44,16 @@ class UserController {
             await user.save();
 
             res.status(200).json({ message: 'User deleted successfully' });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async approve(req, res, next) {
+        try {
+            const agent = await UserService.convertToAgent(req.body.email);
+
+            res.status(200).json(userResponse(agent));
         } catch (err) {
             next(err);
         }

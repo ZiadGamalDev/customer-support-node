@@ -11,6 +11,11 @@ export const roles = Object.freeze({
   AGENT: 'agent',
 });
 
+export const userRolesByAdmin = Object.freeze({
+  USER: 'user',
+  AGENT: 'agent',
+});
+
 /**
  * AVAILABLE: Agent is available to take a new chat
  * BUSY: Agent is busy & not available to take a new chat
