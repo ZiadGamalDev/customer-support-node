@@ -8,10 +8,11 @@ import emailRoutes from '../modules/email/email.routes.js';
 import messageRoutes from '../modules/message/message.routes.js';
 import passwordRoutes from '../modules/password/password.routes.js';
 import profileRoutes from '../modules/profile/profile.routes.js';
-import userRoutes from '../modules/user/user.routes.js';
 import template from '../utils/template.js';
 import notificationRoutes from '../modules/notification/notification.routes.js';
 import adminProfileRoutes from '../modules/admin-profile/profile.routes.js';
+import adminUserRoutes from '../modules/user/user.routes.js';
+import adminChatRoutes from '../modules/admin-chat/chat.routes.js';
 
 const resourceRoutes = (app) => {
   app.get('/', (_, res) => { res.end(template('welcome.html')) });
@@ -27,7 +28,8 @@ const resourceRoutes = (app) => {
   app.use('/notification', notificationRoutes);
 
   app.use('/admin/profile', authenticate(roles.ADMIN), adminProfileRoutes);
-  app.use('/admin/users', authenticate(roles.ADMIN), userRoutes);
+  app.use('/admin/users', authenticate(roles.ADMIN), adminUserRoutes);
+  app.use('/admin/chats', authenticate(roles.ADMIN), adminChatRoutes);
 
   app.use(errorHandler);
 };

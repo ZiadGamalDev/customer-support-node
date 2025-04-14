@@ -27,7 +27,7 @@ class UserValidation {
         return {};
     }
 
-    async profileData({ body, params }) {
+    async update({ body, params }) {
         const validRoles = Object.values(userRolesByAdmin);
 
         if (!params.id || !objectId.validate(params.id)) {

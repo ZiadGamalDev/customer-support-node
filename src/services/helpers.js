@@ -76,27 +76,48 @@ export async function _findNewAgent(chat) {
 export async function _findExistingAgent(chat) {
   console.log("_findExistingAgent/chat:", chat._id);
   const agent = await UserService.findById(chat.agentId);
-  await _notifyAgent(chat, "reassigned");
+  console.log("_findExistingAgent/agent:", agent?._id);
   return agent;
 }
 
 /**************************  ***************************/
 
 export async function _assignChatToAgent(chat, agent) {
-  // Assign Chat
   console.log("_assignChatToAgent/chat:", chat._id);
-  chat.agentId = agent._id;
-  chat.status = chatStatusesBySystem.OPEN;
-  await chat.save();
-  // Assign Messages
-  await MessageService.assignUnassignedMessages(chat._id, agent._id);
-  // Assign Agent
-  console.log("_assignChatToAgent/agent:", agent._id);
-  agent.status = userStatusesBySystem.BUSY;
-  agent.chatsCount = (agent.chatsCount || 0) + 1;
-  await agent.save();
-  // Notify Agent
-  _notifyAgent(chat, "reassigned");
+  if (await UserService.isAgentAvailable(agent)) {
+    chat.agentId = agent._id;
+    chat.status = chatStatusesBySystem.OPEN;
+    await chat.save();
+    await MessageService.assignUnassignedMessages(chat._id, agent._id);
+    console.log("_assignChatToAgent/agent:", agent._id);
+    agent.status = userStatusesBySystem.BUSY;
+    agent.chatsCount = (agent.chatsCount || 0) + 1;
+    await agent.save();
+    _notifyAgent(chat, "reassigned");
+  } else {
+    throw new Error("The selected agent is not available");
+  }
+}
+
+export async function _reassignChatToAgent(chat, agentId) {
+  console.log("_reassignChatToAgent/chat:", chat._id);
+  if (chat.agentId == agentId) throw new Error("The selected agent is already assigned to this chat");
+
+  const currentAgent = await _findExistingAgent(chat);
+  if (currentAgent) {
+    console.log("_reassignChatToAgent/currentAgent:", currentAgent._id);
+    if (currentAgent.chatsCount === 1) {
+      await _makeAgentAvailable(currentAgent);
+    } else {
+      await currentAgent.updateOne({ $inc: { chatsCount: -1 } });
+    }
+  }
+
+  console.log("_reassignChatToAgent/newAgent:", agentId);
+  const newAgent = await UserService.findById(agentId);
+  if (newAgent) {
+    await _assignChatToAgent(chat, newAgent);
+  }
 }
 
 /**************************  ***************************/

@@ -26,7 +26,7 @@ userRoutes.get(
 userRoutes.put(
   '/:id', 
   upload.single('image'), 
-  validate(UserValidation.profileData), 
+  validate(UserValidation.update), 
   UserController.update
 );
 
