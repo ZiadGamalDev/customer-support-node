@@ -51,6 +51,43 @@ const chatSchema = new Schema(
       type: Number,
       default: 0,
     },
+
+    previousAgents: [
+      {
+        agent: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        assignedAt: Date,
+        unassignedAt: Date,
+      },
+    ],
+    statusHistory: [
+      {
+        status: String,
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+        changedBy: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      },
+    ],
+    notes: [
+      {
+        content: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        createdBy: {
+          type: Schema.Types.ObjectId,
+          ref: "Agent",
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
