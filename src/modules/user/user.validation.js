@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { userRolesByAdmin } from '../../database/enums/user.enum.js';
+import { userRolesByAdmin, userStatusesByAgent } from '../../database/enums/user.enum.js';
 import User from '../../database/models/user.model.js';
 import { objectId } from '../../utils/validators.js';
 
@@ -27,8 +27,52 @@ class UserValidation {
         return {};
     }
 
+    async create({ body }) {
+        const validRoles = Object.values(userRolesByAdmin);
+
+        const schema = Joi.object({
+            name: Joi.string().required().messages({
+            'any.required': 'Name is required',
+            }),
+            email: Joi.string().email().required().messages({
+            'any.required': 'Email is required',
+            'string.email': 'Invalid email format',
+            }),
+            password: Joi.string().required().messages({
+            'any.required': 'Password is required',
+            }),
+            confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
+            'any.required': 'Confirm Password is required',
+            'any.only': 'Passwords do not match',
+            }),
+            role: Joi.string().valid(...validRoles).required().messages({
+            'any.required': 'Role is required',
+            'any.only': 'Role must be one of: ' + validRoles.join(', '),
+            }),
+            phone: Joi.string()
+            .pattern(/^01[0-2,5]{1}[0-9]{8}$/)
+            .optional()
+            .messages({
+                'string.pattern.base': 'Phone number must be a valid Egyptian number',
+            }),
+            image: Joi.any().optional(),
+        });
+
+        const { error } = schema.validate(body, { abortEarly: false });
+        if (error) return { error };
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email: body.email });
+        if (existingUser) {
+            return { error: { details: [{ message: 'Email is already in use' }] } };
+        }
+
+        return {};
+    }
+
     async update({ body, params }) {
         const validRoles = Object.values(userRolesByAdmin);
+        const validStatuses = Object.values(userStatusesByAgent);
 
         if (!params.id || !objectId.validate(params.id)) {
             return { error: { details: [{ message: "User Id is required" }] } };
@@ -41,6 +85,10 @@ class UserValidation {
             role: Joi.string().valid(...validRoles).optional().messages({
                 'any.required': 'Roles is required',
                 'any.only': 'Role must be one of: ' + validRoles.join(', '),
+            }),
+            status: Joi.string().valid(...validStatuses).optional().messages({
+                'any.required': 'Status is required',
+                'any.only': 'Status must be one of: ' + validStatuses.join(', '),
             }),
         });
 
