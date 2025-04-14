@@ -6,15 +6,17 @@ import MessageService from "../message/message.service.js";
 
 class ChatService {
   async all() {
-    return await Chat.find({});
+    return await Chat.find({}).populate('agentId', 'name email');
   }
 
   async findById(chatId) {
-    return await Chat.findById(chatId).populate('lastMessageId', 'content senderId receiverId createdAt');
+    return await Chat.findById(chatId)
+      .populate('lastMessageId', 'content senderId receiverId createdAt')
+      .populate('agentId', 'name email');
   }
 
   async update(chatId, { title, description, agentId, status }) {
-    const chat = await Chat.findById(chatId);
+    const chat = await Chat.findById(chatId).populate('agentId', 'name email');
     if (!chat) throw new Error("Chat not found");
 
     if (agentId) await _reassignChatToAgent(chat, agentId);
