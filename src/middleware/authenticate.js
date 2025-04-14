@@ -32,7 +32,7 @@ const authenticate = (role = null) => async (req, res, next) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "User not found. Please ensure you are using a valid token." });
     }
 
     if (role && user.role !== role) {

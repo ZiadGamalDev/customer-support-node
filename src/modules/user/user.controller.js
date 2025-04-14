@@ -38,10 +38,7 @@ class UserController {
 
     async destroy(req, res, next) {
         try {
-            const user = await User.findById(req.params.id);
-
-            user.deletedAt = new Date();
-            await user.save();
+            await UserService.deleteById(req.params.id);
 
             res.status(200).json({ message: 'User deleted successfully' });
         } catch (err) {
