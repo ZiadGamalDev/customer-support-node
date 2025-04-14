@@ -1,6 +1,7 @@
 import file from "../../utils/file.js";
 import User from "../../database/models/user.model.js";
 import { roles, statuses } from "../../database/enums/user.enum.js";
+import updateStatus from "../../services/status.js";
 
 const MAX_CHATS = 3;
 
@@ -58,6 +59,24 @@ class UserService {
     await user.save();
 
     return user;
+  }
+
+  async deleteById(userId) {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.role === roles.AGENT && user.status === statuses.BUSY) {
+      updateStatus.agent(user, statuses.AWAY);
+    }
+
+    if (user.image) {
+      file.destroy(user.image.publicId);
+    }
+
+    await User.deleteOne({ _id: userId });
   }
 }
 
