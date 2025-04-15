@@ -80,6 +80,9 @@ class UserValidation {
 
         const schema = Joi.object({
             name: Joi.string().optional(),
+            email: Joi.string().email().optional().messages({
+                'string.email': 'Invalid email format',
+            }),
             phone: Joi.string().optional(),
             image: Joi.any(),
             role: Joi.string().valid(...validRoles).optional().messages({
@@ -99,6 +102,14 @@ class UserValidation {
         const user = await User.findOne({ _id: params.id });
         if (!user) {
             return { error: { details: [{ message: 'User not found' }] } };
+        }
+
+        // Check if email already exists (excluding the current user's email)
+        if (body.email && body.email !== user.email) {
+            const existingUser = await User.findOne({ email: body.email });
+            if (existingUser) {
+                return { error: { details: [{ message: 'Email is already in use' }] } };
+            }
         }
 
         // Check if user role is valid
