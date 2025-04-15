@@ -41,7 +41,7 @@ class PasswordService {
     }
   }
 
-  async updatePassword(user, oldPassword, newPassword, confirmPassword) {
+  async update(user, { oldPassword, newPassword, confirmPassword }) {
     if (!(await compare(oldPassword, user.password))) {
       throw new Error("Old password is incorrect");
     }

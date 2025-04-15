@@ -1,3 +1,4 @@
+import chatResponse from "../chat/chat.response.js";
 import DashboardService from "./dashboard.service.js";
 
 class DashboardController {

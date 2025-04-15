@@ -11,6 +11,7 @@ class UserService {
   }
 
   async create(data) {
+    console.log("Creating user", data);
     const user = new User(data);
 
     if (data.image) {

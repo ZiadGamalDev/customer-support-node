@@ -7,9 +7,9 @@ import EmailValidation from './email.validation.js';
 
 const emailRoutes = Router();
 
-emailRoutes.get(
+emailRoutes.post(
   '/send', 
-  authenticate(), 
+  validate(EmailValidation.exists),
   EmailController.sendVerificationEmail
 );
 
@@ -21,7 +21,7 @@ emailRoutes.post(
 );
 
 emailRoutes.get(
-  '/verify/:token', 
+  '/verify/:token',
   EmailController.verify
 );
 

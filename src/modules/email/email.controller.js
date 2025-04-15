@@ -1,10 +1,12 @@
+import User from '../../database/models/user.model.js';
 import template from '../../utils/template.js';
 import EmailService from './email.service.js';
 
 class EmailController {
 	async sendVerificationEmail(req, res, next) {
 		try {
-			await EmailService.sendVerificationEmail(req.user);
+			const user = await User.findOne({ email: req.body.email });
+			await EmailService.sendVerificationEmail(user);
 
 			res.status(200).json({ message: 'Verification email sent successfully' });
 		} catch (err) {

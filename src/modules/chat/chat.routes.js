@@ -7,17 +7,19 @@ import { roles } from '../../database/enums/user.enum.js';
 
 const chatRoutes = Router();
 
+/************************************** Agent **************************************/
+
 chatRoutes.get(
   '/agent',
   authenticate(roles.AGENT),
   ChatController.all
 );
 
-chatRoutes.post(
-  '/customer',
-  authenticate(roles.CUSTOMER),
-  validate(chatValidation.create),
-  ChatController.findOrCreate
+chatRoutes.get(
+  '/agent/show/:chatId',
+  authenticate(roles.AGENT),
+  validate(chatValidation.chatExists),
+  ChatController.show
 );
 
 chatRoutes.put(
@@ -28,24 +30,26 @@ chatRoutes.put(
 );
 
 chatRoutes.put(
-  '/customer/read/:chatId',
-  authenticate(roles.CUSTOMER),
-  validate(chatValidation.chatExists),
-  ChatController.customerResetUnreadCount
-);
-
-chatRoutes.put(
   '/agent/:chatId/:status',
   authenticate(roles.AGENT),
   validate(chatValidation.updateStatus),
   ChatController.agentUpdateStatus
 );
 
-chatRoutes.get(
-  '/agent/show/:chatId',
-  // authenticate(roles.AGENT),
+/************************************** Customer **************************************/
+
+chatRoutes.post(
+  '/customer',
+  authenticate(roles.CUSTOMER),
+  validate(chatValidation.create),
+  ChatController.findOrCreate
+);
+
+chatRoutes.put(
+  '/customer/read/:chatId',
+  authenticate(roles.CUSTOMER),
   validate(chatValidation.chatExists),
-  ChatController.show
+  ChatController.customerResetUnreadCount
 );
 
 export default chatRoutes;

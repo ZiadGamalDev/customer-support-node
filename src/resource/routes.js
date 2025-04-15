@@ -25,7 +25,7 @@ const resourceRoutes = (app) => {
   app.use('/email', emailRoutes);
   app.use('/password', passwordRoutes);
 
-  app.use('/profile', profileRoutes);
+  app.use('/profile', authenticate(roles.AGENT), profileRoutes);
   app.use('/dashboard', authenticate(roles.AGENT), dashboardRoutes);
 
   app.use('/chats', chatRoutes);
@@ -33,8 +33,10 @@ const resourceRoutes = (app) => {
   app.use('/notification', notificationRoutes);
 
   app.use('/admin/auth', adminAuthRoutes);
+
   app.use('/admin/profile', authenticate(roles.ADMIN), adminProfileRoutes);
   app.use('/admin/dashboard', authenticate(roles.ADMIN), adminDashboardRoutes);
+
   app.use('/admin/users', authenticate(roles.ADMIN), adminUserRoutes);
   app.use('/admin/chats', authenticate(roles.ADMIN), adminChatRoutes);
 

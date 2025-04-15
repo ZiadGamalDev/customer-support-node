@@ -39,15 +39,9 @@ class AuthController {
     }
   }
 
-  async updatePass(req, res, next) {
+  async update(req, res, next) {
     try {
-      const { oldPassword, newPassword, confirmPassword } = req.body;
-      await PasswordService.updatePassword(
-        req.user,
-        oldPassword,
-        newPassword,
-        confirmPassword
-      );
+      await PasswordService.update(req.user, req.body);
 
       res.status(200).json({ message: "Password updated successfully" });
     } catch (err) {

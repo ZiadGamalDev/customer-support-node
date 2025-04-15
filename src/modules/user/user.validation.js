@@ -71,7 +71,7 @@ class UserValidation {
                 .messages({
                     'string.pattern.base': 'Phone number must be a valid Egyptian number',
                 }),
-            image: Joi.any().optional(),
+            image: Joi.any(),
         });
 
         const { error } = schema.validate(body, { abortEarly: false });
