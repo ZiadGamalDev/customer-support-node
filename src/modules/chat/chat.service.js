@@ -44,6 +44,7 @@ class ChatService {
 
     if (chat) {
       Object.assign(chat, data);
+      await chat.save();
       if (await this.isChatReadyToOpen(chat)) {
         agent = await _findNewAgent(chat);
       } else {

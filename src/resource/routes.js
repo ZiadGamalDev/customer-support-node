@@ -11,6 +11,7 @@ import profileRoutes from '../modules/profile/profile.routes.js';
 import dashboardRoutes from '../modules/dashboard/dashboard.routes.js';
 import template from '../utils/template.js';
 import notificationRoutes from '../modules/notification/notification.routes.js';
+import adminAuthRoutes from '../modules/admin-auth/auth.routes.js';
 import adminProfileRoutes from '../modules/admin-profile/profile.routes.js';
 import adminDashboardRoutes from '../modules/admin-dashboard/dashboard.routes.js';
 import adminUserRoutes from '../modules/user/user.routes.js';
@@ -31,6 +32,7 @@ const resourceRoutes = (app) => {
   app.use('/messages', messageRoutes);
   app.use('/notification', notificationRoutes);
 
+  app.use('/admin/auth', adminAuthRoutes);
   app.use('/admin/profile', authenticate(roles.ADMIN), adminProfileRoutes);
   app.use('/admin/dashboard', authenticate(roles.ADMIN), adminDashboardRoutes);
   app.use('/admin/users', authenticate(roles.ADMIN), adminUserRoutes);
