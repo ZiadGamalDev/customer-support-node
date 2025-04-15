@@ -15,6 +15,8 @@ const chatResponse = (chat) => {
     lastMessage: chat.lastMessage ? messageResponse(chat.lastMessage) : chat.lastMessageId,
     customer: chat.customer ? customerResponse(chat.customer) : chat.customerId,
     agent: chat.agent ? userResponse(chat.agent) : chat.agentId,
+    agentLogs: chat.agentLogs,
+    statusLogs: chat.statusLogs,
   };
 };
 
