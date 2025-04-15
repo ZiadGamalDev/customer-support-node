@@ -38,11 +38,12 @@ class ChatService {
     return role === roles.AGENT ? chat.agentId : chat.customerId;
   }
 
-  async findOrCreate(customer) {
+  async findOrCreate(customer, data) {
     let chat = await Chat.findOne({ customerId: customer._id });
     let agent;
 
     if (chat) {
+      Object.assign(chat, data);
       if (await this.isChatReadyToOpen(chat)) {
         agent = await _findNewAgent(chat);
       } else {
@@ -51,7 +52,8 @@ class ChatService {
     } else {
       chat = await Chat.create({
         customerId: customer._id,
-        title: `Chat with ${customer.username}`,
+        title: data.title ?? `Chat with ${customer.username}`,
+        description: data.description ?? "No description provided",
       });
       agent = await _findNewAgent(chat);
     }

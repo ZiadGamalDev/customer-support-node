@@ -16,6 +16,7 @@ chatRoutes.get(
 chatRoutes.post(
   '/customer',
   authenticate(roles.CUSTOMER),
+  validate(chatValidation.create),
   ChatController.findOrCreate
 );
 
