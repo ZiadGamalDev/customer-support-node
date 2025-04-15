@@ -54,11 +54,15 @@ export async function _makeChatNew(chat) {
 }
 
 export async function _makeAgentAvailable(agent) {
-  console.log("_makeAgentAvailable/agent:", agent._id);
-  agent.status = userStatusesByAgent.AVAILABLE;
-  agent.chatsCount = 0;
+  console.log("_makeAgentAvailable/chatsCount:", agent.chatsCount);
+  if (agent.chatsCount > 1) {
+    agent.chatsCount -= 1;
+  } else {
+    agent.chatsCount = 0;
+    agent.status = userStatusesByAgent.AVAILABLE;
+  }
   await agent.save();
-  const chat = await ChatService.findChatReadyToOpen()
+  const chat = await ChatService.findChatReadyToOpen();
   if (chat) await _assignChatToAgent(chat, agent);
 }
 
@@ -106,18 +110,12 @@ export async function _reassignChatToAgent(chat, agentId) {
   const currentAgent = await _findExistingAgent(chat);
   if (currentAgent) {
     console.log("_reassignChatToAgent/currentAgent:", currentAgent._id);
-    if (currentAgent.chatsCount === 1) {
-      await _makeAgentAvailable(currentAgent);
-    } else {
-      await currentAgent.updateOne({ $inc: { chatsCount: -1 } });
-    }
+    await _makeAgentAvailable(currentAgent);
   }
 
   console.log("_reassignChatToAgent/newAgent:", agentId);
   const newAgent = await UserService.findById(agentId);
-  if (newAgent) {
-    await _assignChatToAgent(chat, newAgent);
-  }
+  if (newAgent) await _assignChatToAgent(chat, newAgent);
 }
 
 /**************************  ***************************/
