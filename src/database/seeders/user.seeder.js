@@ -9,7 +9,7 @@ const users = [
     {
         role: roles.ADMIN,
         name: 'Admin',
-        email: 'admin@customer-support.com',
+        email: 'ziad.gamal.tech@gmail.com',
         password: password,
         emailVerifiedAt: date,
     },
