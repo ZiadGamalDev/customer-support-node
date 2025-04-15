@@ -1,6 +1,8 @@
 import { statuses } from "../../database/enums/chat.enum.js";
 import Chat from "../../database/models/chat.model.js";
 
+const LIMIT = 4;
+
 class DashboardService {
   async statistics(agentId) {
     const totalChats = await Chat.countDocuments({ agentId: agentId });
@@ -18,6 +20,13 @@ class DashboardService {
         new: newChats,
       },
     };
+  }
+
+  async recentChats(agentId) {
+    return await Chat.find({ agentId: agentId })
+      .sort({ createdAt: -1 })
+      .limit(LIMIT)
+      .populate("agentId", "name email");
   }
 }
 

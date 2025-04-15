@@ -3,6 +3,8 @@ import { roles } from "../../database/enums/user.enum.js";
 import Chat from "../../database/models/chat.model.js";
 import User from "../../database/models/user.model.js";
 
+const LIMIT = 4;
+
 class DashboardService {
   async statistics() {
     const totalAgents = await User.countDocuments({ role: roles.AGENT });
@@ -27,6 +29,13 @@ class DashboardService {
         new: newChats,
       },
     };
+  }
+
+  async recentChats() {
+    return await Chat.find()
+      .sort({ createdAt: -1 })
+      .limit(LIMIT)
+      .populate("agentId", "name email");
   }
 }
 
