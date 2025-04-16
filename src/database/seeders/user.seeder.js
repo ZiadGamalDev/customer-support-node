@@ -2,16 +2,15 @@ import User from '../models/user.model.js';
 import { hash } from '../../utils/crypto.js';
 import { roles, statuses } from '../enums/user.enum.js';
 
-const password = await hash('123456789');
+const password = await hash('123456789zZ');
 const date = new Date();
 
 const users = [
     {
         role: roles.ADMIN,
         name: 'Admin',
-        email: 'admin@customer-support.com',
+        email: 'ziad.gamal.tech@gmail.com',
         password: password,
-        phone: '1234567890',
         emailVerifiedAt: date,
     },
     {
@@ -19,7 +18,6 @@ const users = [
         name: 'User',
         email: 'user@example.com',
         password: password,
-        phone: '1234567891',
         emailVerifiedAt: date,
     },
     {
@@ -28,7 +26,6 @@ const users = [
         name: 'Ziad Gamal',
         email: 'ziadgamal@example.com',
         password: password,
-        phone: '1234567892',
         emailVerifiedAt: date,
     },
     {
@@ -37,7 +34,6 @@ const users = [
         name: 'Sara Khaled',
         email: 'sarakhaled@example.com',
         password: password,
-        phone: '1234567893',
         emailVerifiedAt: date,
     },
     {
@@ -45,7 +41,6 @@ const users = [
         name: 'Ahmed Frag',
         email: 'ahmedfrag@example.com',
         password: password,
-        phone: '1234567894',
         emailVerifiedAt: date,
     },
 ];

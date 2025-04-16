@@ -16,7 +16,7 @@ export async function _handleAwayAgent(agent) {
 
   const chats = await ChatService.agentChats(agent._id);
   for (const chat of chats) {
-    await _makeChatNew(chat);
+    await _makeChatPending(chat);
     await _findNewAgent(chat);
   }
 }
@@ -30,6 +30,7 @@ export async function _handlePendingChat(chat) {
   console.log("_handlePendingChat/chat:", chat._id);
   const agent = await _findExistingAgent(chat);
   if (agent) await _makeAgentAvailable(agent)
+  _logStatus(chat, chatStatusesByAgent.PENDING);
   chat.agentId = null;
   chat.status = chatStatusesByAgent.PENDING;
   await chat.save();
@@ -39,6 +40,7 @@ export async function _handleResolvedChat(chat) {
   console.log("_handleResolvedChat/chat:", chat._id);
   const agent = await _findExistingAgent(chat);
   if (agent) await _makeAgentAvailable(agent)
+  _logStatus(chat, chatStatusesByAgent.RESOLVED);
   chat.agentId = null;
   chat.status = chatStatusesByAgent.RESOLVED;
   await chat.save();
@@ -46,19 +48,24 @@ export async function _handleResolvedChat(chat) {
 
 /**************************  ***************************/
 
-export async function _makeChatNew(chat) {
-  console.log("_makeChatNew/chat:", chat._id);
+export async function _makeChatPending(chat) {
+  console.log("_makeChatPending/chat:", chat._id);
+  _logStatus(chat, chatStatusesBySystem.PENDING);
   chat.agentId = null;
-  chat.status = chatStatusesBySystem.NEW;
+  chat.status = chatStatusesBySystem.PENDING;
   await chat.save();
 }
 
 export async function _makeAgentAvailable(agent) {
-  console.log("_makeAgentAvailable/agent:", agent._id);
-  agent.status = userStatusesByAgent.AVAILABLE;
-  agent.chatsCount = 0;
+  console.log("_makeAgentAvailable/chatsCount:", agent.chatsCount);
+  if (agent.chatsCount > 1) {
+    agent.chatsCount -= 1;
+  } else {
+    agent.chatsCount = 0;
+    agent.status = userStatusesByAgent.AVAILABLE;
+  }
   await agent.save();
-  const chat = await ChatService.findChatReadyToOpen()
+  const chat = await ChatService.findChatReadyToOpen();
   if (chat) await _assignChatToAgent(chat, agent);
 }
 
@@ -84,19 +91,24 @@ export async function _findExistingAgent(chat) {
 
 export async function _assignChatToAgent(chat, agent) {
   console.log("_assignChatToAgent/chat:", chat._id);
-  if (await UserService.isAgentAvailable(agent)) {
-    chat.agentId = agent._id;
-    chat.status = chatStatusesBySystem.OPEN;
-    await chat.save();
-    await MessageService.assignUnassignedMessages(chat._id, agent._id);
-    console.log("_assignChatToAgent/agent:", agent._id);
-    agent.status = userStatusesBySystem.BUSY;
-    agent.chatsCount = (agent.chatsCount || 0) + 1;
-    await agent.save();
-    _notifyAgent(chat, "reassigned");
-  } else {
+  if (! await UserService.isAgentAvailable(agent)) {
     throw new Error("The selected agent is not available");
   }
+
+  _logAgent(chat, agent._id);
+  chat.agentId = agent._id;
+  chat.status = chatStatusesBySystem.OPEN;
+  _logStatus(chat, chatStatusesBySystem.OPEN);
+  await chat.save();
+
+  await MessageService.assignUnassignedMessages(chat._id, agent._id);
+  console.log("_assignChatToAgent/agent:", agent._id);
+
+  agent.status = userStatusesBySystem.BUSY;
+  agent.chatsCount = (agent.chatsCount || 0) + 1;
+  await agent.save();
+
+  _notifyAgent(chat, "reassigned");
 }
 
 export async function _reassignChatToAgent(chat, agentId) {
@@ -106,18 +118,24 @@ export async function _reassignChatToAgent(chat, agentId) {
   const currentAgent = await _findExistingAgent(chat);
   if (currentAgent) {
     console.log("_reassignChatToAgent/currentAgent:", currentAgent._id);
-    if (currentAgent.chatsCount === 1) {
-      await _makeAgentAvailable(currentAgent);
-    } else {
-      await currentAgent.updateOne({ $inc: { chatsCount: -1 } });
-    }
+    await _makeAgentAvailable(currentAgent);
   }
 
   console.log("_reassignChatToAgent/newAgent:", agentId);
   const newAgent = await UserService.findById(agentId);
-  if (newAgent) {
-    await _assignChatToAgent(chat, newAgent);
-  }
+  if (newAgent) await _assignChatToAgent(chat, newAgent);
+}
+
+/**************************  ***************************/
+
+export async function _logStatus(chat, status) {
+  console.log("_logStatus/status:", status);
+  chat.statusLogs.push({ status, createdAt: new Date() });
+}
+
+export async function _logAgent(chat, agentId) {
+  console.log("_logAgent/chat:", chat._id);
+  chat.agentLogs.push({ agentId, createdAt: new Date() });
 }
 
 /**************************  ***************************/

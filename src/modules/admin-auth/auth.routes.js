@@ -3,14 +3,9 @@ import AuthController from './auth.controller.js';
 import AuthValidation from './auth.validation.js';
 import validate from '../../middleware/validate.js';
 import authenticate from '../../middleware/authenticate.js';
+import { roles } from '../../database/enums/user.enum.js';
 
 const authRoutes = Router();
-
-authRoutes.post(
-  '/register',
-  validate(AuthValidation.register),
-  AuthController.register
-);
 
 authRoutes.post(
   '/login',
@@ -20,7 +15,7 @@ authRoutes.post(
 
 authRoutes.post(
   '/logout',
-  authenticate(),
+  authenticate(roles.ADMIN),
   AuthController.logout
 );
 

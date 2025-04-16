@@ -24,7 +24,7 @@ class MessageService {
   }
 
   async isFirstMessage(chat) {
-    return ! await Message.exists({ chatId: chat._id });
+    return !(await Message.exists({ chatId: chat._id }));
   }
 
   async create(chatId, senderId, content) {
@@ -41,8 +41,11 @@ class MessageService {
         await _notifyChatCreated(chat);
       }
 
-      const senderRole = chat.customerId.equals(senderId) ? roles.CUSTOMER : roles.AGENT;
-      const receiverId = senderRole == roles.AGENT ? chat.customerId : chat.agentId;
+      const senderRole = chat.customerId.equals(senderId)
+        ? roles.CUSTOMER
+        : roles.AGENT;
+      const receiverId =
+        senderRole == roles.AGENT ? chat.customerId : chat.agentId;
       const message = await Message.create({
         chatId,
         senderId,
@@ -51,6 +54,8 @@ class MessageService {
         senderRole,
       });
 
+      console.log("message creation", message);
+
       chat.lastMessageId = message._id;
       if (senderRole == roles.AGENT) {
         chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
@@ -58,11 +63,7 @@ class MessageService {
         chat.customerUnreadCount = (chat.customerUnreadCount || 0) + 1;
       }
       await chat.save();
-
-      return await Message.findById(message._id)
-        .populate("senderId", "name email")
-        .populate("receiverId", "name email")
-        .lean();
+      return message;
     } catch (error) {
       throw new Error(`Failed to create message: ${error.message}`);
     }

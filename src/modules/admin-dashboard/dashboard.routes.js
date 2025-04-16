@@ -8,4 +8,9 @@ dashboardRoutes.get(
   DashboardController.statistics
 );
 
+dashboardRoutes.get(
+  "/recent-chats",
+  DashboardController.recentChats
+);
+
 export default dashboardRoutes;

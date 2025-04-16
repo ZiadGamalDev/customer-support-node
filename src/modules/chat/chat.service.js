@@ -7,6 +7,7 @@ import {
   _assignChatToAgent,
   _findExistingAgent,
   _findNewAgent,
+  _logStatus,
   _notifyAgent,
 } from "../../services/helpers.js";
 
@@ -23,7 +24,7 @@ class ChatService {
   }
 
   async findChatReadyToOpen() {
-    return await Chat.findOne({ status: { $in: [statuses.NEW, statuses.PENDING, statuses.RESOLVED] } }).sort({
+    return await Chat.findOne({ status: { $in: [statuses.NEW, statuses.PENDING] } }).sort({
       createdAt: 1,
     });
   }
@@ -38,11 +39,13 @@ class ChatService {
     return role === roles.AGENT ? chat.agentId : chat.customerId;
   }
 
-  async findOrCreate(customer) {
+  async findOrCreate(customer, data) {
     let chat = await Chat.findOne({ customerId: customer._id });
     let agent;
 
     if (chat) {
+      Object.assign(chat, data);
+      await chat.save();
       if (await this.isChatReadyToOpen(chat)) {
         agent = await _findNewAgent(chat);
       } else {
@@ -51,8 +54,10 @@ class ChatService {
     } else {
       chat = await Chat.create({
         customerId: customer._id,
-        title: `Chat with ${customer.username}`,
+        title: data.title ?? `Chat with ${customer.username}`,
+        description: data.description ?? "No description provided",
       });
+      await _logStatus(chat, statuses.NEW);
       agent = await _findNewAgent(chat);
     }
 

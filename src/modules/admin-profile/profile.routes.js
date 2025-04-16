@@ -13,8 +13,8 @@ profileRoutes.get(
 
 profileRoutes.put(
   "/",
-  validate(ProfileValidation.profileData),
   upload.single("image"),
+  validate(ProfileValidation.profileData),
   ProfileController.update
 );
 

@@ -51,6 +51,32 @@ const chatSchema = new Schema(
       type: Number,
       default: 0,
     },
+    agentLogs: [
+      {
+        agentId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: false,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    statusLogs: [
+      {
+        status: {
+          type: String,
+          enum: Object.values(statuses),
+          default: statuses.NEW,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

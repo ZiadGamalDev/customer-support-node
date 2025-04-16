@@ -29,7 +29,7 @@ const chats = [
 const chatSeeder = async () => {
     try {
         await Chat.deleteMany({});
-        await Chat.insertMany(chats);
+        // await Chat.insertMany(chats);
 
         console.log('Chats seeded successfully');
     } catch (error) {

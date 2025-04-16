@@ -4,6 +4,7 @@ import { _handleAvailableAgent, _handleAwayAgent, _handlePendingChat, _handleRes
 
 const updateStatus = {
   async agent(agent, status) {
+    console.log("\n------------------------\n");
     if (status === userStatusesByAgent.AWAY) {
       await _handleAwayAgent(agent);
     } else if (status === userStatusesByAgent.AVAILABLE) {
@@ -12,6 +13,7 @@ const updateStatus = {
   },
 
   async chat(chat, status) {
+    console.log("\n------------------------\n");
     if (status === chatStatusesByAgent.PENDING) {
       await _handlePendingChat(chat);
     } else if (status === chatStatusesByAgent.RESOLVED) {
