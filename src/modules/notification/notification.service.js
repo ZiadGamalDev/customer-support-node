@@ -7,8 +7,11 @@ import mongoose from "mongoose";
 class NotificationService {
   async createMessageNotification(message, chat) {
     try {
+      console.log("test message noti", message);
       const role = message.senderRole;
-      const preview = message.content.substring(0, 50) + (message.content.length > 50 ? "..." : "");
+      const preview =
+        message.content.substring(0, 50) +
+        (message.content.length > 50 ? "..." : "");
 
       const notification = await Notification.create({
         userId: message.receiverId,
@@ -27,9 +30,13 @@ class NotificationService {
       });
 
       if (role === roles.AGENT) {
-        await Chat.findByIdAndUpdate(chat._id, { $inc: { customerUnreadCount: 1 } });
+        await Chat.findByIdAndUpdate(chat._id, {
+          $inc: { customerUnreadCount: 1 },
+        });
       } else {
-        await Chat.findByIdAndUpdate(chat._id, { $inc: { agentUnreadCount: 1 } });
+        await Chat.findByIdAndUpdate(chat._id, {
+          $inc: { agentUnreadCount: 1 },
+        });
       }
 
       return notification;
@@ -41,10 +48,12 @@ class NotificationService {
   //  method to create chat notifications when a customer starts or resumes a chat
   async createChatNotification(chat, type = "new") {
     try {
-      const title = type === "new" ? "New customer chat" : "Customer resumed chat";
-      const content = type === "new"
-        ? `A new customer needs assistance`
-        : `Customer has resumed a previously resolved chat`;
+      const title =
+        type === "new" ? "New customer chat" : "Customer resumed chat";
+      const content =
+        type === "new"
+          ? `A new customer needs assistance`
+          : `Customer has resumed a previously resolved chat`;
 
       const notification = await Notification.create({
         userId: chat.agentId,
@@ -228,13 +237,13 @@ class NotificationService {
       );
 
       console.log(`Found ${userSockets.length} sockets for user ${userId}`);
-      console.log('Emitting with options:', options);
+      console.log("Emitting with options:", options);
 
       const payload = {
         notifications,
         pagination,
         unreadCount,
-        options // Include options in payload for client reference
+        options, // Include options in payload for client reference
       };
 
       userSockets.forEach((socket) => {
@@ -263,13 +272,15 @@ class NotificationService {
         metadata: {
           chatId,
           status,
-          ...metadata
+          ...metadata,
         },
       });
 
       return notification;
     } catch (error) {
-      throw new Error(`Failed to create status change notification: ${error.message}`);
+      throw new Error(
+        `Failed to create status change notification: ${error.message}`
+      );
     }
   }
 }
