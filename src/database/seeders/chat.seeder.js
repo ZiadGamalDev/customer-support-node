@@ -13,12 +13,23 @@ const chats = [
         agentUnreadCount: 0,
         customerUnreadCount: 0,
     },
+    {
+        agentId: null,
+        customerId: "67e37fb75bd917110ad41359",
+        title: "Payment issue",
+        description: "The customer is facing issues with payment processing.",
+        status: statuses.NEW,
+        priority: priorities.HIGH,
+        lastMessageId: null,
+        agentUnreadCount: 0,
+        customerUnreadCount: 0,
+    },
 ];
 
 const chatSeeder = async () => {
     try {
         await Chat.deleteMany({});
-        await Chat.insertMany(chats);
+        // await Chat.insertMany(chats);
 
         console.log('Chats seeded successfully');
     } catch (error) {

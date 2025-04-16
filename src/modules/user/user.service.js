@@ -9,14 +9,30 @@ class UserService {
   async findById(userId) {
     return await User.findById(userId);
   }
+
+  async create(data) {
+    console.log("Creating user", data);
+    const user = new User(data);
+
+    if (data.image) {
+      user.image = await file.store(data.image, "images/user");
+    }
+
+    await user.save();
+    return user;
+  }
   
   async update({ user, body: data, file: image }) {
     if (image) {
       data.image = await file.store(image, "images/user");
 
       if (user.image) {
-        file.destroy(user.image.publicId);
+        await file.destroy(user.image.publicId);
       }
+    }
+
+    if (data.status && user.role == roles.AGENT) {
+      await updateStatus.agent(user, data.status);
     }
 
     Object.assign(user, data);

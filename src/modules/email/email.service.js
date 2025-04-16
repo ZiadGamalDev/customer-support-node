@@ -4,47 +4,55 @@ import template from '../../utils/template.js';
 import sendEmail from '../../services/email.js';
 
 class EmailService {
-    async sendWelcomeEmail(user) {
-        const emailTemplate = template('email/welcome.html');
+  async sendWelcomeEmail(user) {
+    const emailTemplate = template('email/welcome.html');
 
-        await sendEmail(user.email, 'Welcome to our platform', emailTemplate);
+    await sendEmail(user.email, 'Welcome to our platform', emailTemplate);
+  }
+
+  async sendVerificationEmail(user) {
+    if (user.emailVerifiedAt) {
+      throw new Error('Email is already verified');
     }
 
-    async sendVerificationEmail(user) {
-        if (user.emailVerifiedAt) {
-            throw new Error('Email is already verified');
-        }
+    const emailToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EMAIL_EXPIRY });
+    const verifyLink = `${process.env.APP_BASE_URL}/email/verify/${emailToken}`;
+    const emailTemplate = template('email/verification.html').replace('{{verifyLink}}', verifyLink);
 
-        const emailToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EMAIL_EXPIRY });
-        const verifyLink = `${process.env.APP_BASE_URL}/email/verify/${emailToken}`;
-        const emailTemplate = template('email/verification.html').replace('{{verifyLink}}', verifyLink);
+    await sendEmail(user.email, 'Verify your email', emailTemplate);
+  }
 
-        await sendEmail(user.email, 'Verify your email', emailTemplate);
+  async reportAdmin({ email, subject, message }) {
+    const emailTemplate = template('email/report.html')
+      .replace('{{subject}}', subject)
+      .replace('{{message}}', message);
+
+    await sendEmail(email, 'Agent Report', emailTemplate);
+  }
+
+  async verify(token) {
+    let email;
+    try {
+      ({ email } = jwt.verify(token, process.env.JWT_SECRET));
+    } catch (err) {
+      throw new Error('Invalid verification link');
     }
 
-    async verify(token) {
-        let email;
-        try {
-            ({ email } = jwt.verify(token, process.env.JWT_SECRET));
-        } catch (err) {
-            throw new Error('Invalid verification link');
-        }
+    const user = await User.findOne({ email });
 
-        const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-        if (!user) {
-            throw new Error('User not found');
-        }
+    if (user.emailVerifiedAt) {
+      throw new Error('Email is already verified');
+    }
 
-        if (user.emailVerifiedAt) {
-            throw new Error('Email is already verified');
-        }
+    user.emailVerifiedAt = Date.now();
+    await user.save();
 
-        user.emailVerifiedAt = Date.now();
-        await user.save();
-
-        return user;
-    }   
+    return user;
+  }
 }
 
 export default new EmailService();
