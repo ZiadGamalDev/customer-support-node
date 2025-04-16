@@ -8,11 +8,11 @@ import { roles } from "../../database/enums/user.enum.js";
 
 const profileRoutes = Router();
 
-profileRoutes.get("/", authenticate(), ProfileController.show);
+profileRoutes.get("/", authenticate(roles.AGENT), ProfileController.show);
 
 profileRoutes.put(
   "/",
-  authenticate(),
+  authenticate(roles.AGENT),
   // validate(ProfileValidation.updateProfile),
   upload.single("image"),
   ProfileController.update
