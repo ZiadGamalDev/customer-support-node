@@ -22,7 +22,6 @@ const users = [
     },
     {
         role: roles.AGENT,
-        status: statuses.AVAILABLE,
         name: 'Ziad Gamal',
         email: 'ziadgamal@example.com',
         password: password,
@@ -30,7 +29,6 @@ const users = [
     },
     {
         role: roles.AGENT,
-        status: statuses.AVAILABLE,
         name: 'Sara Khaled',
         email: 'sarakhaled@example.com',
         password: password,

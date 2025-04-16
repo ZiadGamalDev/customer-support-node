@@ -108,6 +108,7 @@ export async function _assignChatToAgent(chat, agent) {
   agent.chatsCount = (agent.chatsCount || 0) + 1;
   await agent.save();
 
+  _notifyChatCreated(chat);
   _notifyAgent(chat, "reassigned");
 }
 
