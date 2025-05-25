@@ -1,6 +1,11 @@
 node_modules
-storage
-public
-.env*
+
+.env
+.env.production
+
 .notes
 .vercel
+
+storage
+public/chat
+public/chat.html
