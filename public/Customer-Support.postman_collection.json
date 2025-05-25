@@ -1,0 +1,2596 @@
+{
+	"info": {
+		"_postman_id": "4db04cc4-ae30-443e-9dd9-58b93e556d42",
+		"name": "Customer-Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42655911",
+		"_collection_link": "https://iti-graduation.postman.co/workspace/Team-Workspace~d19719a6-fd24-4f8b-84c3-bfb870771ca9/collection/42655911-4db04cc4-ae30-443e-9dd9-58b93e556d42?action=share&source=collection_link&creator=42655911"
+	},
+	"item": [
+		{
+			"name": "Dev",
+			"item": [
+				{
+					"name": "Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}dev/test",
+							"host": [
+								"{{baseUrl}}dev"
+							],
+							"path": [
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}dev/seed",
+							"host": [
+								"{{baseUrl}}dev"
+							],
+							"path": [
+								"seed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ziad Gamal\",\r\n    \"email\": \"zyadgamal450@gmail.com\",\r\n    \"password\": \"123456789@zZ\",\r\n    \"confirmedPassword\": \"123456789@zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/register",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"email\": \"user@example.com\",\r\n    // \"email\": \"zyadgamal450@gmail.com\",\r\n    // \"email\": \"sarakhaled@example.com\",\r\n    \"email\": \"ziadgamal@example.com\",\r\n    \"password\": \"123456789zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    // \"email\": \"user@example.com\",\r\n    // \"email\": \"zyadgamal450@gmail.com\",\r\n    // \"password\": \"123456789\"\r\n    // \"email\": \"sondosomarr2020@gmail.com\",\r\n     \"password\": \"123456789\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}auth/login",
+											"host": [
+												"{{baseUrl}}auth"
+											],
+											"path": [
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "public, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Content-Length",
+											"value": "426"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 27 Mar 2025 21:48:01 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"1aa-exZPdxmHe+A5lb8Lv4m8r6Lg5wg\""
+										},
+										{
+											"key": "Server",
+											"value": "Vercel"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=63072000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "X-Vercel-Cache",
+											"value": "MISS"
+										},
+										{
+											"key": "X-Vercel-Id",
+											"value": "fra1::iad1::w8hhd-1743112080961-807a06178927"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"user\": {\n        \"id\": \"67e3889c698cf44ae3924e2f\",\n        \"name\": \"Admin\",\n        \"email\": \"admin@example.com\",\n        \"phone\": \"1234567890\",\n        \"role\": \"admin\",\n        \"emailVerifiedAt\": \"2025-03-26T04:54:50.552Z\",\n        \"createdAt\": \"2025-03-26T04:54:52.330Z\",\n        \"updatedAt\": \"2025-03-26T04:54:52.330Z\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTM4ODljNjk4Y2Y0NGFlMzkyNGUyZiIsImlhdCI6MTc0MzExMjA4MSwiZXhwIjoxNzUyMTEyMDgxfQ.0fRZITPqXev_SdH_0LTWGZ1Q3Yh70nb9SNPRaIzTWEw\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}auth/logout",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Email",
+					"item": [
+						{
+							"name": "Send Email Verification",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDlmN2U1ZTMzY2I5MWIwNmQ5ZDY3OSIsImlhdCI6MTc0MjkyMzkwMCwiZXhwIjoxNzUxOTIzOTAwfQ.9VKODCRR2GSG8P0QqjXx5jkITr-fHwQGa8WDactsYmE",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"zyadgamal450@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}email/send",
+									"host": [
+										"{{baseUrl}}email"
+									],
+									"path": [
+										"send"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Report To Admin",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDlmN2U1ZTMzY2I5MWIwNmQ5ZDY3OSIsImlhdCI6MTc0MjkyMzkwMCwiZXhwIjoxNzUxOTIzOTAwfQ.9VKODCRR2GSG8P0QqjXx5jkITr-fHwQGa8WDactsYmE",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ziad.gamal.tech@gmail.com\",\r\n    \"subject\": \"Test subject\",\r\n    \"message\": \"Test message\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}email/report",
+									"host": [
+										"{{baseUrl}}email"
+									],
+									"path": [
+										"report"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Password",
+					"item": [
+						{
+							"name": "Forgot Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"zyadgamal450@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}password/forgot",
+									"host": [
+										"{{baseUrl}}password"
+									],
+									"path": [
+										"forgot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"zyadgamal450@gmail.com\",\r\n    \"otp\": \"528966\",\r\n    \"newPassword\": \"123456789zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}password/reset",
+									"host": [
+										"{{baseUrl}}password"
+									],
+									"path": [
+										"reset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"12345678zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}password/confirm",
+									"host": [
+										"{{baseUrl}}password"
+									],
+									"path": [
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"oldPassword\": \"123456789zZ\",\r\n    \"newPassword\": \"12345678zZ\",\r\n    \"confirmPassword\": \"12345678zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}password/update",
+									"host": [
+										"{{baseUrl}}password"
+									],
+									"path": [
+										"update"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Agent",
+			"item": [
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}profile",
+									"host": [
+										"{{baseUrl}}profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Ziad",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "01026264486",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1effede0-20b3-4b20-b42c-8baad309b529",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}profile",
+									"host": [
+										"{{baseUrl}}profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Status",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmNhNDUwYWFkNWZkYWYzZjg5YTk5YiIsImVtYWlsIjoic2FyYWhraGFsZWRAZ21haWwuY29tIiwiaWF0IjoxNzQ0NjEwOTcyLCJleHAiOjE3NTM2MTA5NzJ9.HfCTly6ge-KAX-SCOFfmc586JeCZIIw_lyY0_1E8JCI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}profile/agent/:status",
+									"host": [
+										"{{baseUrl}}profile"
+									],
+									"path": [
+										"agent",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "status",
+											"value": "away",
+											"description": "away-available"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Statistics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}dashboard/statistics",
+									"host": [
+										"{{baseUrl}}dashboard"
+									],
+									"path": [
+										"statistics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recent Chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}dashboard/recent-chats",
+									"host": [
+										"{{baseUrl}}dashboard"
+									],
+									"path": [
+										"recent-chats"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Recent Chats",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}admin/dashboard/recent-chats",
+											"host": [
+												"{{baseUrl}}admin"
+											],
+											"path": [
+												"dashboard",
+												"recent-chats"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1036"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"40c-KI/zle4P9wLZYnYcioV9PWG2VhY\""
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 15 Apr 2025 04:24:55 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"67fdde756487cc769e892759\",\n        \"title\": \"Ahmed Mustafa 2247\",\n        \"description\": \"Ahmed mostafa Hippo 2247dd bla bla bla\",\n        \"status\": \"open\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:20:05.205Z\",\n        \"customer\": \"67fdce5d88ed5db1aca03a43\",\n        \"agent\": {\n            \"_id\": \"67fdddd8070e9a3d0ec537ef\",\n            \"name\": \"Ziad Gamal\",\n            \"email\": \"ziadgamal@example.com\"\n        }\n    },\n    {\n        \"id\": \"67fdddd8070e9a3d0ec537f5\",\n        \"title\": \"Issue with product delivery\",\n        \"description\": \"The customer has reported an issue with the delivery of their product.\",\n        \"status\": \"new\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:17:28.873Z\",\n        \"lastMessage\": null,\n        \"customer\": \"67bef377acc3a71c30892e61\",\n        \"agent\": null\n    },\n    {\n        \"id\": \"67fdddd8070e9a3d0ec537f6\",\n        \"title\": \"Payment issue\",\n        \"description\": \"The customer is facing issues with payment processing.\",\n        \"status\": \"new\",\n        \"priority\": \"high\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:17:28.873Z\",\n        \"lastMessage\": null,\n        \"customer\": \"67e37fb75bd917110ad41359\",\n        \"agent\": null\n    }\n]"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Chat",
+					"item": [
+						{
+							"name": "All Chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}chats/agent",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"agent"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Agent: All Chats",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}chats/agent",
+											"host": [
+												"{{baseUrl}}chats"
+											],
+											"path": [
+												"agent"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "public, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Content-Length",
+											"value": "2"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 27 Mar 2025 21:49:30 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+										},
+										{
+											"key": "Server",
+											"value": "Vercel"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=63072000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "X-Vercel-Cache",
+											"value": "BYPASS"
+										},
+										{
+											"key": "X-Vercel-Id",
+											"value": "fra1::iad1::p7sz4-1743112170402-f489c6b9b1b5"
+										}
+									],
+									"cookie": [],
+									"body": "[]"
+								}
+							]
+						},
+						{
+							"name": "Chat",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}chats/agent/show/:chatId",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"agent",
+										"show",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read Chat",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}chats/agent/read/:chatId",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"agent",
+										"read",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "67e589dd67f27a7c611e7627"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Chat Status",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}chats/agent/:chatId/:status",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"agent",
+										":chatId",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										},
+										{
+											"key": "status",
+											"value": "pending",
+											"description": "pending-resolved"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Message",
+					"item": [
+						{
+							"name": "All Messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}messages/agent/:chatId",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"agent",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send Message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"chatId\": \"{{chatId}}\",\r\n    \"content\": \"Hey\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}messages/agent/send",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"agent",
+										"send"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Message Status",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}messages/agent/:messageId/:status",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"agent",
+										":messageId",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "messageId",
+											"value": "{{chatId}}"
+										},
+										{
+											"key": "status",
+											"value": "delivered"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "notification",
+					"item": [
+						{
+							"name": "user 's nontifications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}notification/?limit=5",
+									"host": [
+										"{{baseUrl}}notification"
+									],
+									"path": [
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "New Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}notification/?limit=5",
+											"host": [
+												"{{baseUrl}}notification"
+											],
+											"path": [
+												""
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "82"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"52-aDPVYF9KXfql3b6pll3CW7LH9fk\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 03 Apr 2025 17:21:33 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"notifications\": [],\n    \"pagination\": {\n        \"total\": 0,\n        \"limit\": 5,\n        \"offset\": 0,\n        \"hasMore\": false\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "get unread count",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}notification/unread",
+									"host": [
+										"{{baseUrl}}notification"
+									],
+									"path": [
+										"unread"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "New Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}notification/unread",
+											"host": [
+												"{{baseUrl}}notification"
+											],
+											"path": [
+												"unread"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "11"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"b-ch7MNww9+xUYoTgutbGr6VU0GaU\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 03 Apr 2025 17:23:46 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{userToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Chat",
+					"item": [
+						{
+							"name": "Find Or Create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{customerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Product return request\",\r\n    \"description\": \"I wanna return a product.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}chats/customer",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"customer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read Chat",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{customerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}chats/customer/read/:chatId",
+									"host": [
+										"{{baseUrl}}chats"
+									],
+									"path": [
+										"customer",
+										"read",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "67e589dd67f27a7c611e7627"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Message",
+					"item": [
+						{
+							"name": "All Messages",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{customerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}messages/customer/:chatId",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"customer",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send Message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{customerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"chatId\": \"{{chatId}}\",\r\n    \"content\": \"Hi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}messages/customer/send",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"customer",
+										"send"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Message Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{customerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}messages/customer/:messageId/:status",
+									"host": [
+										"{{baseUrl}}messages"
+									],
+									"path": [
+										"customer",
+										":messageId",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "messageId",
+											"value": "{{chatId}}"
+										},
+										{
+											"key": "status",
+											"value": "delivered"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "notification",
+					"item": [
+						{
+							"name": "user 's nontifications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}notification/?limit=5",
+									"host": [
+										"{{baseUrl}}notification"
+									],
+									"path": [
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "New Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}notification/?limit=5",
+											"host": [
+												"{{baseUrl}}notification"
+											],
+											"path": [
+												""
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "82"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"52-aDPVYF9KXfql3b6pll3CW7LH9fk\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 03 Apr 2025 17:21:33 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"notifications\": [],\n    \"pagination\": {\n        \"total\": 0,\n        \"limit\": 5,\n        \"offset\": 0,\n        \"hasMore\": false\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "get unread count",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}notification/unread",
+									"host": [
+										"{{baseUrl}}notification"
+									],
+									"path": [
+										"unread"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "New Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjMTBmZDY4YzA4MDkwZGFhMjJlMiIsImlhdCI6MTc0MzcwMDIzOSwiZXhwIjoxNzUyNzAwMjM5fQ.wg7S0ghXuROSfkrJ-qmXb4VxhSV-iHBp6go77EAPdnI",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}notification/unread",
+											"host": [
+												"{{baseUrl}}notification"
+											],
+											"path": [
+												"unread"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "11"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"b-ch7MNww9+xUYoTgutbGr6VU0GaU\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 03 Apr 2025 17:23:46 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"count\": 0\n}"
+								}
+							]
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{userToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ziad.gamal.tech@gmail.com\",\r\n    \"password\": \"123456789zZ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/auth/login",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    // \"email\": \"user@example.com\",\r\n    // \"email\": \"zyadgamal450@gmail.com\",\r\n    // \"password\": \"123456789\"\r\n    // \"email\": \"sondosomarr2020@gmail.com\",\r\n     \"password\": \"123456789\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}auth/login",
+											"host": [
+												"{{baseUrl}}auth"
+											],
+											"path": [
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "public, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Content-Length",
+											"value": "426"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 27 Mar 2025 21:48:01 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"1aa-exZPdxmHe+A5lb8Lv4m8r6Lg5wg\""
+										},
+										{
+											"key": "Server",
+											"value": "Vercel"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=63072000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "X-Vercel-Cache",
+											"value": "MISS"
+										},
+										{
+											"key": "X-Vercel-Id",
+											"value": "fra1::iad1::w8hhd-1743112080961-807a06178927"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"user\": {\n        \"id\": \"67e3889c698cf44ae3924e2f\",\n        \"name\": \"Admin\",\n        \"email\": \"admin@example.com\",\n        \"phone\": \"1234567890\",\n        \"role\": \"admin\",\n        \"emailVerifiedAt\": \"2025-03-26T04:54:50.552Z\",\n        \"createdAt\": \"2025-03-26T04:54:52.330Z\",\n        \"updatedAt\": \"2025-03-26T04:54:52.330Z\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTM4ODljNjk4Y2Y0NGFlMzkyNGUyZiIsImlhdCI6MTc0MzExMjA4MSwiZXhwIjoxNzUyMTEyMDgxfQ.0fRZITPqXev_SdH_0LTWGZ1Q3Yh70nb9SNPRaIzTWEw\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/auth/logout",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/profile",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Ziad Gamal",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "01026264486",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1effede0-20b3-4b20-b42c-8baad309b529",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/profile",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Statistics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/dashboard/statistics",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"dashboard",
+										"statistics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recent Chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/dashboard/recent-chats",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"dashboard",
+										"recent-chats"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Recent Chats",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}admin/dashboard/recent-chats",
+											"host": [
+												"{{baseUrl}}admin"
+											],
+											"path": [
+												"dashboard",
+												"recent-chats"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1036"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"40c-KI/zle4P9wLZYnYcioV9PWG2VhY\""
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 15 Apr 2025 04:24:55 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"67fdde756487cc769e892759\",\n        \"title\": \"Ahmed Mustafa 2247\",\n        \"description\": \"Ahmed mostafa Hippo 2247dd bla bla bla\",\n        \"status\": \"open\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:20:05.205Z\",\n        \"customer\": \"67fdce5d88ed5db1aca03a43\",\n        \"agent\": {\n            \"_id\": \"67fdddd8070e9a3d0ec537ef\",\n            \"name\": \"Ziad Gamal\",\n            \"email\": \"ziadgamal@example.com\"\n        }\n    },\n    {\n        \"id\": \"67fdddd8070e9a3d0ec537f5\",\n        \"title\": \"Issue with product delivery\",\n        \"description\": \"The customer has reported an issue with the delivery of their product.\",\n        \"status\": \"new\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:17:28.873Z\",\n        \"lastMessage\": null,\n        \"customer\": \"67bef377acc3a71c30892e61\",\n        \"agent\": null\n    },\n    {\n        \"id\": \"67fdddd8070e9a3d0ec537f6\",\n        \"title\": \"Payment issue\",\n        \"description\": \"The customer is facing issues with payment processing.\",\n        \"status\": \"new\",\n        \"priority\": \"high\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-15T04:17:28.873Z\",\n        \"lastMessage\": null,\n        \"customer\": \"67e37fb75bd917110ad41359\",\n        \"agent\": null\n    }\n]"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/users",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/users/:userId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "{{userId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User: Add Agent",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "role",
+											"value": "agent",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Ziad Gamal",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "ziadgamal@example.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456789zZ",
+											"type": "text"
+										},
+										{
+											"key": "confirmPassword",
+											"value": "123456789zZ",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "01026264486",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1effede0-20b3-4b20-b42c-8baad309b529"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/users",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "User Copy",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "role",
+													"value": "agent",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "Ziad Gamal",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "ziadgamal3@example.com",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "123456789",
+													"type": "text"
+												},
+												{
+													"key": "confirmPassword",
+													"value": "123456789",
+													"type": "text"
+												},
+												{
+													"key": "phone",
+													"value": "01026264486",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "image",
+													"type": "file",
+													"src": "postman-cloud:///1effede0-20b3-4b20-b42c-8baad309b529",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}admin/users",
+											"host": [
+												"{{baseUrl}}admin"
+											],
+											"path": [
+												"users"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "195"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"c3-vwt2EhKL1SfTYcUj++r+952tPhU\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 14 Apr 2025 18:54:23 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"67fd59dfb9d07a070b5aa1ad\",\n    \"name\": \"Ziad Gamal\",\n    \"email\": \"ziadgamal3@example.com\",\n    \"role\": \"agent\",\n    \"status\": \"away\",\n    \"createdAt\": \"2025-04-14T18:54:23.921Z\",\n    \"updatedAt\": \"2025-04-14T18:54:23.921Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "User",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "role",
+											"value": "agent",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Ziad Gamal",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "ziadgamal1@example.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "1234567890",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1effede0-20b3-4b20-b42c-8baad309b529",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "available",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/users/:userId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "{{userId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/users/:userId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "{{userId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Approve: Convert User To Agent",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"zyadgamal450@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/users/approve",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"users",
+										"approve"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Chat",
+					"item": [
+						{
+							"name": "All Chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/chats",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"chats"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "All Chats",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}admin/chats",
+											"host": [
+												"{{baseUrl}}admin"
+											],
+											"path": [
+												"chats"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "787"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"313-v1ImOhVTL094ihNU4x0Vr67g/mc\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 14 Apr 2025 19:07:47 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"67fd4311021660ddd30c6a57\",\n        \"title\": \"Issue with product delivery\",\n        \"description\": \"The customer has reported an issue with the delivery of their product.\",\n        \"status\": \"open\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-14T17:17:05.027Z\",\n        \"lastMessage\": null,\n        \"customer\": \"67bef377acc3a71c30892e61\",\n        \"agent\": {\n            \"_id\": \"67fd4310021660ddd30c6a51\",\n            \"name\": \"Ziad Gamal\",\n            \"email\": \"ziadgamal@example.com\"\n        }\n    },\n    {\n        \"id\": \"67fd5633b9d07a070b5aa19a\",\n        \"title\": \"Chat with hippo\",\n        \"description\": \"No description provided\",\n        \"status\": \"open\",\n        \"priority\": \"medium\",\n        \"customerUnreadCount\": 0,\n        \"agentUnreadCount\": 0,\n        \"createdAt\": \"2025-04-14T18:38:43.962Z\",\n        \"customer\": \"67e37fb75bd917110ad41359\",\n        \"agent\": {\n            \"_id\": \"67fd4310021660ddd30c6a52\",\n            \"name\": \"Sara Khaled\",\n            \"email\": \"sarakhaled@example.com\"\n        }\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Chat",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/chats/:chatId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"chats",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Chat",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}admin/chats/:chatId",
+											"host": [
+												"{{baseUrl}}admin"
+											],
+											"path": [
+												"chats",
+												":chatId"
+											],
+											"variable": [
+												{
+													"key": "chatId",
+													"value": "{{chatId}}"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "430"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"1ae-lhlAolv6Kox+eQqPo3pAodhSr00\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 14 Apr 2025 19:10:31 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"67fd4311021660ddd30c6a57\",\n    \"title\": \"Issue with product delivery\",\n    \"description\": \"The customer has reported an issue with the delivery of their product.\",\n    \"status\": \"open\",\n    \"priority\": \"medium\",\n    \"customerUnreadCount\": 0,\n    \"agentUnreadCount\": 0,\n    \"createdAt\": \"2025-04-14T17:17:05.027Z\",\n    \"lastMessage\": null,\n    \"customer\": \"67bef377acc3a71c30892e61\",\n    \"agent\": {\n        \"_id\": \"67fd4310021660ddd30c6a51\",\n        \"name\": \"Ziad Gamal\",\n        \"email\": \"ziadgamal@example.com\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Chat",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"agentId\": \"{{userId}}\",\r\n    // \"title\": \"Test title 1\",\r\n    // \"description\": \"Test description\"\r\n\r\n    // // separate call:\r\n    \"status\": \"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}admin/chats/:chatId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"chats",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Chat",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}admin/chats/:chatId",
+									"host": [
+										"{{baseUrl}}admin"
+									],
+									"path": [
+										"chats",
+										":chatId"
+									],
+									"variable": [
+										{
+											"key": "chatId",
+											"value": "{{chatId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{adminToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "userToken",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "customerToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWVkemV6bzIyNDdAZ21haWwuY29tIiwiaWQiOiI2N2UzNGQ5NjQyZjY3M2QzZDgxYzZhOGQiLCJsb2dnZWRJbiI6dHJ1ZSwiaWF0IjoxNzQzMTAzODc2LCJleHAiOjE3NDMxOTAyNzZ9.HkdyUgAauv1bZiS_YYyJeyJkmCdWf_ApPClWCx_tJCs",
+			"type": "default"
+		},
+		{
+			"key": "customerToken",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "chatId",
+			"value": "67f30e18058d427dec29cad9",
+			"type": "default"
+		},
+		{
+			"key": "userId",
+			"value": "67fc0c0cdcc5b058beaf6722",
+			"type": "default"
+		}
+	]
+}
