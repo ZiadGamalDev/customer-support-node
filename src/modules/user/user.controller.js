@@ -6,7 +6,7 @@ import UserService from './user.service.js';
 class UserController {
     async index(req, res, next) {
         try {
-            const users = await User.find({ role: { $in: [roles.USER, roles.AGENT] } });
+            const users = await User.find({ role: { $in: [roles.USER, roles.AGENT] } }).sort({ createdAt: -1 });
 
             res.status(200).json(users.map(userResponse));
         } catch (err) {

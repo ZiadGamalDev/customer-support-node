@@ -7,7 +7,6 @@ import mongoose from "mongoose";
 class NotificationService {
   async createMessageNotification(message, chat) {
     try {
-      console.log("test message noti", message);
       const role = message.senderRole;
       const preview =
         message.content.substring(0, 50) +

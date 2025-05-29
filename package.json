@@ -7,7 +7,8 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "node src/database/seeders/index.js"
+    "seed": "node src/database/seeders/index.js",
+    "seed:prod": "node src/database/seeders/index.production.js"
   },
   "keywords": [],
   "author": "",

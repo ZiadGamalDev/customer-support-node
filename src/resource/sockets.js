@@ -56,7 +56,7 @@ const resourceSockets = (socket, io) => {
         socket.userId,
         content
       );
-      console.log("Message created", message);
+      console.log("Message created", message._id);
 
       socket.emit("messageDelivered", { message });
       console.log("Message delivered to sender", message._id);
@@ -65,8 +65,7 @@ const resourceSockets = (socket, io) => {
         socket.to(chatId).emit("messageReceived", { message });
         console.log("Message sent to receiver", chatId, message._id);
 
-        console.log("message before noti creation ", message);
-        const notification =
+        const notification = 
           await NotificationService.createMessageNotification(message, chat);
         console.log("Notification created", notification._id);
       }

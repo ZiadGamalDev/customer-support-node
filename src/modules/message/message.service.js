@@ -54,8 +54,6 @@ class MessageService {
         senderRole,
       });
 
-      console.log("message creation", message);
-
       chat.lastMessageId = message._id;
       if (senderRole == roles.AGENT) {
         chat.agentUnreadCount = (chat.agentUnreadCount || 0) + 1;
