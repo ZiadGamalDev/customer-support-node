@@ -2,13 +2,13 @@ import User from '../models/user.model.js';
 import { hash } from '../../utils/crypto.js';
 import { roles, statuses } from '../enums/user.enum.js';
 
-const password = await hash('123456789zZ');
+const password = await hash('123456zZ');
 const date = new Date();
 
 const users = [
     {
         role: roles.ADMIN,
-        name: 'Admin',
+        name: 'Ziad Gamal',
         email: 'ziad.gamal.tech@gmail.com',
         password: password,
         emailVerifiedAt: date,
@@ -17,13 +17,6 @@ const users = [
         role: roles.USER,
         name: 'User',
         email: 'user@example.com',
-        password: password,
-        emailVerifiedAt: date,
-    },
-    {
-        role: roles.AGENT,
-        name: 'Ziad Gamal',
-        email: 'ziadgamal@example.com',
         password: password,
         emailVerifiedAt: date,
     },
