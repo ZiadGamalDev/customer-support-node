@@ -37,7 +37,7 @@ class AuthController {
 
   async logout(req, res, next) {
     try {
-      if (user.role === roles.AGENT && user.status === statuses.BUSY) {
+      if (user.role === roles.AGENT) {
         updateStatus.agent(user, statuses.AWAY);
       }
 
