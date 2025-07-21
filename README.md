@@ -4,6 +4,50 @@ A powerful real-time backend system that handles **customer support ticketing, a
 
 This project was developed as the **core engine** of the ITI Graduation Project — designed to simulate live support between external customers and internal agents via scalable WebSocket-powered infrastructure.
 
+## 🌐 **Live Demo**
+- **Production API**: https://customer-support-node.dinamo-app.com
+- **API Status**: https://customer-support-node.dinamo-app.com/dev/test
+- **Beautiful Landing Page**: Professional API documentation with features overview
+
+## 🚀 **Quick Start**
+
+### **Production Environment**
+The backend is deployed and ready to use:
+```bash
+API_URL=https://customer-support-node.dinamo-app.com
+SOCKET_URL=https://customer-support-node.dinamo-app.com
+```
+
+### **Local Development**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ZiadGamalDev/customer-support-node.git
+   cd customer-support-node
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Update .env with your local MongoDB and email settings
+   ```
+
+4. Seed the database:
+   ```bash
+   npm run seed
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+The server will be available at `http://localhost:3000`
+
 ---
 
 ## ⚙️ Core Features
@@ -66,29 +110,89 @@ public/Customer-Support.postman_collection.json
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ **Tech Stack**
 
-- Node.js + Express.js
-- MongoDB + Mongoose
-- Socket.IO
-- JWT Auth
-- Joi Validation
-- Modular Clean Architecture
+- **Runtime**: Node.js + Express.js
+- **Database**: MongoDB Atlas + Mongoose ODM
+- **Real-time**: Socket.IO for WebSocket connections
+- **Authentication**: JWT with role-based access control
+- **Validation**: Joi schemas for request validation
+- **Architecture**: Modular clean architecture
+- **Deployment**: PM2 process manager on Contabo VPS
+- **Proxy**: Apache with SSL termination
+
+## 📡 **API Documentation**
+
+Visit the live API documentation at: https://customer-support-node.dinamo-app.com
+
+### **Key Endpoints:**
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User authentication  
+- `GET /chats` - Get user chats
+- `POST /chats` - Create new support ticket
+- `GET /messages/:chatId` - Get chat messages
+- `GET /admin/dashboard` - Admin analytics
+
+### **WebSocket Events:**
+- `join_chat` - Join a chat room
+- `send_message` - Send real-time message
+- `typing` - Typing indicators
+- `agent_status_change` - Agent availability updates
+
+## 🗂️ **Project Structure**
+
+```
+src/
+├── modules/           # Feature modules
+│   ├── auth/         # Authentication & authorization
+│   ├── chat/         # Chat management
+│   ├── message/      # Real-time messaging
+│   ├── admin-*       # Admin dashboard APIs
+│   └── user/         # User management
+├── middleware/       # Custom middleware
+├── database/         # Models, seeders, connection
+├── templates/        # Email & HTML templates
+└── utils/           # Helper utilities
+```
 
 ---
 
-## 🔗 Part of a Multi-App System
+## 🔗 **Related Projects**
 
-This backend connects with other micro-apps like:
+This backend powers a complete customer support ecosystem:
 
-- Agent dashboard → Angular frontend
-- Customer chat → React frontend
-- E-commerce system → For simulating live customers
+- **Agent Dashboard**: [Customer Support Agent React](https://github.com/ZiadGamalDev/customer-support-agent-react)
+- **Admin Panel**: [Customer Support Admin Angular](https://github.com/ZiadGamalDev/customer-support-admin-angular)  
+- **E-commerce Integration**: [E-commerce Node Backend](https://github.com/ZiadGamalDev/ecommerce-node)
+- **Customer Chat Widget**: Integrated into e-commerce frontend
 
-👉 [View Root Repository](https://github.com/ZiadGamalDev/customer-support-system)
+👉 **[View Complete System Repository](https://github.com/ZiadGamalDev/customer-support-system)**
+
+## 🎯 **Production Ready**
+
+✅ **Deployed**: Live on Contabo VPS with PM2  
+✅ **Scalable**: Ready for high-traffic loads  
+✅ **Monitored**: PM2 logs and process management  
+✅ **Secure**: JWT authentication + CORS configured  
+✅ **Real-time**: Socket.IO with proper connection handling
+
+## 📬 **Testing**
+
+Import the Postman collection for complete API testing:
+```
+public/Customer-Support.postman_collection.json
+```
+
+Or test the live API directly:
+```bash
+curl https://customer-support-node.dinamo-app.com/dev/test
+# Returns: {"message":"OK"}
+```
 
 ---
 
-## 📄 License
+## 📄 **License**
 
-MIT — Feel free to explore, clone, and build on top of it.
+MIT — Feel free to explore, clone, and build amazing customer support systems! 
+
+**Built with ❤️ by ITI Team**
