@@ -18,7 +18,10 @@ import adminUserRoutes from '../modules/user/user.routes.js';
 import adminChatRoutes from '../modules/admin-chat/chat.routes.js';
 
 const resourceRoutes = (app) => {
-  app.get('/', (_, res) => { res.end(template('welcome.html')) });
+  app.get('/', (_, res) => { 
+    res.setHeader('Content-Type', 'text/html');
+    res.end(template('welcome.html'));
+  });
   app.use('/dev', devRoutes);
 
   app.use('/auth', authRoutes);
@@ -39,6 +42,11 @@ const resourceRoutes = (app) => {
 
   app.use('/admin/users', authenticate(roles.ADMIN), adminUserRoutes);
   app.use('/admin/chats', authenticate(roles.ADMIN), adminChatRoutes);
+
+  // 404 handler for unmatched routes
+  app.use('*', (req, res) => {
+    res.status(404).json({ error: 'Route not found', path: req.originalUrl });
+  });
 
   app.use(errorHandler);
 };
