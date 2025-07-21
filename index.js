@@ -12,8 +12,9 @@ connectDB();
 NotificationScheduler.init();
 
 const PORT = process.env.PORT || 3000;
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-const server = app.listen(PORT, () =>
+const HOST = process.env.HOST || "0.0.0.0";
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+const server = app.listen(PORT, HOST, () =>
   console.log(`Server running at ${BASE_URL}`)
 );
 const io = new Server(server, { cors: "*" });
