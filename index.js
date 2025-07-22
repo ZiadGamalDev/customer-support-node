@@ -17,7 +17,21 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 const server = app.listen(PORT, HOST, () =>
   console.log(`Server running at ${BASE_URL}`)
 );
-const io = new Server(server, { cors: "*" });
+
+// Socket.IO CORS configuration using environment variables
+const allowedOrigins = [
+  process.env.ADMIN_FRONTEND_URL,
+  process.env.AGENT_FRONTEND_URL,
+  process.env.CHAT_FRONTEND_URL,
+  process.env.ECOMMERCE_FRONTEND_URL
+].filter(Boolean); // Remove any undefined values
+
+const io = new Server(server, { 
+  cors: {
+    origin: allowedOrigins,
+    credentials: true
+  }
+});
 
 global.io = io;
 // io.use(authenticateSocket);
