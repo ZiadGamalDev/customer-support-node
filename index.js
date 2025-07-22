@@ -40,7 +40,7 @@ const io = new Server(server, {
 });
 
 global.io = io;
-// io.use(authenticateSocket);
+io.use(authenticateSocket);
 io.on("connection", (socket) => { resourceSockets(socket, io) });
 setSocketIO(io);
 

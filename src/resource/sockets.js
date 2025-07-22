@@ -7,13 +7,16 @@ const resourceSockets = (socket, io) => {
 
   socket.on("joinNotification", async (agentId) => {
     try {
-      if (!agentId) {
+      // Use the authenticated user ID if no agentId provided
+      const targetAgentId = agentId || socket.user._id.toString();
+      
+      if (!targetAgentId) {
         throw new Error("Agent ID is required");
       }
 
-      socket.join(agentId.toString());
+      socket.join(targetAgentId);
 
-      console.log("Agent joined notification room", { agentId });
+      console.log("Agent joined notification room", { agentId: targetAgentId });
     } catch (err) {
       console.error("Join notification error", { error: err.message });
       socket.emit("error", { message: "Failed to join notification room" });
