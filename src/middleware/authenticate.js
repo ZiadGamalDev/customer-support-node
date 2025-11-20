@@ -16,12 +16,14 @@ const authenticate = (role = null) => async (req, res, next) => {
       ? (process.env.ECOMMERCE_JWT_SECRET || process.env.JWT_SECRET)
       : process.env.JWT_SECRET;
 
-    logger.info("JWT verification", { 
+    // Debug logging
+    console.log("JWT verification DEBUG:", { 
       role, 
       rolesCUSTOMER: roles.CUSTOMER, 
       isCustomer: role == roles.CUSTOMER,
       hasEcommerceSecret: !!process.env.ECOMMERCE_JWT_SECRET,
-      jwtSecretLength: jwtSecret?.length 
+      jwtSecretLength: jwtSecret?.length,
+      jwtSecretPreview: jwtSecret?.substring(0, 20)
     });
 
     const { id } = jwt.verify(token, jwtSecret);
