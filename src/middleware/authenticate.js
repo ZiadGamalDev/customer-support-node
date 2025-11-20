@@ -26,7 +26,15 @@ const authenticate = (role = null) => async (req, res, next) => {
       jwtSecretPreview: jwtSecret?.substring(0, 20)
     });
 
-    const { id } = jwt.verify(token, jwtSecret);
+    let id;
+    try {
+      id = jwt.verify(token, jwtSecret).id;
+    } catch (jwtError) {
+      console.log("JWT verify error:", jwtError.message);
+      console.log("Token preview:", token.substring(0, 50));
+      console.log("JWT Secret used:", jwtSecret?.substring(0, 20));
+      throw jwtError;
+    }
 
     if (role == roles.CUSTOMER) {
       const response = await axios.get(`${process.env.CLIENT_BASE_URL}/profile`, {
