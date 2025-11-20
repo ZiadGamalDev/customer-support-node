@@ -11,7 +11,12 @@ const authenticate = (role = null) => async (req, res, next) => {
       return res.status(401).json({ message: "Token is required" });
     }
 
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    // For customers, use ecommerce JWT secret; for others, use customer-support JWT secret
+    const jwtSecret = role == roles.CUSTOMER 
+      ? (process.env.ECOMMERCE_JWT_SECRET || process.env.JWT_SECRET)
+      : process.env.JWT_SECRET;
+
+    const { id } = jwt.verify(token, jwtSecret);
 
     if (role == roles.CUSTOMER) {
       const response = await axios.get(`${process.env.CLIENT_BASE_URL}/profile`, {
