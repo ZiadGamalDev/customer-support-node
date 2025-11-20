@@ -55,7 +55,15 @@ const authenticate = (role = null) => async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    logger.error("Authentication error", { error: err.message, stack: err.stack });
+    logger.error("Authentication error", { 
+      error: err.message, 
+      stack: err.stack,
+      role,
+      rolesCUSTOMER: roles.CUSTOMER,
+      isCustomer: role == roles.CUSTOMER,
+      hasEcommerceSecret: !!process.env.ECOMMERCE_JWT_SECRET,
+      jwtSecretUsed: role == roles.CUSTOMER ? (process.env.ECOMMERCE_JWT_SECRET || process.env.JWT_SECRET)?.substring(0, 20) : process.env.JWT_SECRET?.substring(0, 20)
+    });
     return res.status(401).json({ message: "Invalid Token" });
   }
 };
