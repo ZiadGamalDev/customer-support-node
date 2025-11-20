@@ -161,7 +161,7 @@ export async function _emitAssignNotificationToAgent(chat, notification) {
     const io = global.io;
     if (!io) return;
 
-    io.to(chat._id).emit("chatNotified", notification);
+    io.to(chat.agentId.toString()).emit("chatNotified", notification, chat);
   } catch (error) {
     console.error("Failed to emit notification to agent:", error);
   }

@@ -15,7 +15,11 @@ const userSchema = new Schema({
     },
     name: {
         type: String,
-        required: true,
+        // required: true, // Made optional to support ecommerce users
+        trim: true,
+    },
+    username: { // Added to support ecommerce users
+        type: String,
         trim: true,
     },
     email: {

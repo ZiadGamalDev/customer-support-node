@@ -43,7 +43,20 @@ const resourceSockets = (socket, io) => {
     }
   });
 
+  socket.on("authenticate", async ({ userId }) => {
+    try {
+      if (!userId) throw new Error("User ID is required");
+      socket.join(userId.toString());
+      console.log("User authenticated and joined room", userId);
+      socket.emit("authenticated", { userId });
+    } catch (err) {
+      console.error("Authentication error", err);
+      socket.emit("error", { message: "Authentication failed" });
+    }
+  });
+
   socket.on("sendMessage", async ({ chatId, message: content }) => {
+    console.log("DEBUG: sendMessage event received", { chatId, content, socketUserId: socket.userId });
     try {
       if (!chatId || !content) {
         throw new Error("Missing required message parameters");
@@ -64,16 +77,24 @@ const resourceSockets = (socket, io) => {
       socket.emit("messageDelivered", { message });
       console.log("Message delivered to sender", message._id);
 
-      if (chat.agentId) {
+      // Determine recipient
+      const senderRole = message.senderRole;
+      const recipientId = senderRole === 'agent' ? chat.customerId : chat.agentId;
+
+      if (recipientId) {
         socket.to(chatId).emit("messageReceived", { message });
         console.log("Message sent to receiver", chatId, message._id);
 
         const notification = 
           await NotificationService.createMessageNotification(message, chat);
         console.log("Notification created", notification._id);
+
+        // Emit notification to the recipient's personal room
+        io.to(recipientId.toString()).emit("notification", notification);
+        console.log(`Notification emitted to ${senderRole === 'agent' ? 'customer' : 'agent'} ${recipientId}`);
       }
     } catch (err) {
-      console.error("Message error", { error: err.message, chatId });
+      console.error("DEBUG: Message error", { error: err.message, stack: err.stack, chatId });
       socket.emit("error", {
         message: "Failed to send message",
         error: err.message,
