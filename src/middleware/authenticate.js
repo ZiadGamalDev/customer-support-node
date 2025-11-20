@@ -16,25 +16,7 @@ const authenticate = (role = null) => async (req, res, next) => {
       ? (process.env.ECOMMERCE_JWT_SECRET || process.env.JWT_SECRET)
       : process.env.JWT_SECRET;
 
-    // Debug logging
-    console.log("JWT verification DEBUG:", { 
-      role, 
-      rolesCUSTOMER: roles.CUSTOMER, 
-      isCustomer: role == roles.CUSTOMER,
-      hasEcommerceSecret: !!process.env.ECOMMERCE_JWT_SECRET,
-      jwtSecretLength: jwtSecret?.length,
-      jwtSecretPreview: jwtSecret?.substring(0, 20)
-    });
-
-    let id;
-    try {
-      id = jwt.verify(token, jwtSecret).id;
-    } catch (jwtError) {
-      console.log("JWT verify error:", jwtError.message);
-      console.log("Token preview:", token.substring(0, 50));
-      console.log("JWT Secret used:", jwtSecret?.substring(0, 20));
-      throw jwtError;
-    }
+    const { id } = jwt.verify(token, jwtSecret);
 
     if (role == roles.CUSTOMER) {
       const response = await axios.get(`${process.env.CLIENT_BASE_URL}/profile`, {
