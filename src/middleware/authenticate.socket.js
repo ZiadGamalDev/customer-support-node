@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../database/models/user.model.js';
+import axios from 'axios';
 
 const authenticateSocket = async (socket, next) => {
     try {
@@ -9,15 +10,44 @@ const authenticateSocket = async (socket, next) => {
             return next(new Error('Authentication error: Token is missing'));
         }
 
-        const { id } = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(id);
+        // Try to verify with customer-support JWT secret first
+        try {
+            const { id } = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(id);
 
-        if (!user) {
-            return next(new Error('Authentication error: User not found'));
+            if (user) {
+                socket.user = user;
+                socket.userId = user._id.toString();
+                socket.userType = user.role;
+                return next();
+            }
+        } catch (err) {
+            // If that fails, try with ecommerce JWT secret (for customers)
+            try {
+                const ecommerceSecret = process.env.ECOMMERCE_JWT_SECRET || process.env.JWT_SECRET;
+                const { id } = jwt.verify(token, ecommerceSecret);
+                
+                // For customers, verify with ecommerce API
+                const response = await axios.get(`${process.env.CLIENT_BASE_URL}/profile`, {
+                    headers: {
+                        accesstoken: `accesstoken_${token}`,
+                    },
+                });
+
+                if (response.status === 200 && response.data?.user) {
+                    socket.user = response.data.user;
+                    socket.userId = response.data.user._id || id;
+                    socket.userType = 'customer';
+                    return next();
+                } else {
+                    return next(new Error('Authentication error: Invalid customer data'));
+                }
+            } catch (ecommerceErr) {
+                return next(new Error('Authentication error: Invalid token'));
+            }
         }
 
-        socket.user = user;
-        next();
+        return next(new Error('Authentication error: User not found'));
     } catch (err) {
         next(new Error('Authentication error: Invalid token'));
     }
