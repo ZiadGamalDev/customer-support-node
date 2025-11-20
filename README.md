@@ -5,8 +5,8 @@ A powerful real-time backend system that handles **customer support ticketing, a
 This project was developed as the **core engine** of the ITI Graduation Project — designed to simulate live support between external customers and internal agents via scalable WebSocket-powered infrastructure.
 
 ## 🌐 **Live Demo**
-- **Production API**: https://customer-support-node.dinamo-app.com
-- **API Status**: https://customer-support-node.dinamo-app.com/dev/test
+- **Production API**: https://customer-support-api.ziadgamal.com
+- **API Status**: https://customer-support-api.ziadgamal.com/dev/test
 - **Beautiful Landing Page**: Professional API documentation with features overview
 
 ## 🚀 **Quick Start**
@@ -14,8 +14,8 @@ This project was developed as the **core engine** of the ITI Graduation Project 
 ### **Production Environment**
 The backend is deployed and ready to use:
 ```bash
-API_URL=https://customer-support-node.dinamo-app.com
-SOCKET_URL=https://customer-support-node.dinamo-app.com
+API_URL=https://customer-support-api.ziadgamal.com
+SOCKET_URL=https://customer-support-api.ziadgamal.com
 ```
 
 ### **Local Development**
@@ -118,12 +118,12 @@ public/Customer-Support.postman_collection.json
 - **Authentication**: JWT with role-based access control
 - **Validation**: Joi schemas for request validation
 - **Architecture**: Modular clean architecture
-- **Deployment**: PM2 process manager on Contabo VPS
-- **Proxy**: Apache with SSL termination
+- **Deployment**: PM2 process manager on ziadgamal server
+- **Proxy**: Nginx with SSL termination
 
 ## 📡 **API Documentation**
 
-Visit the live API documentation at: https://customer-support-node.dinamo-app.com
+Visit the live API documentation at: https://customer-support-api.ziadgamal.com
 
 ### **Key Endpoints:**
 - `POST /auth/register` - User registration
@@ -170,7 +170,7 @@ This backend powers a complete customer support ecosystem:
 
 ## 🎯 **Production Ready**
 
-✅ **Deployed**: Live on Contabo VPS with PM2  
+✅ **Deployed**: Live on ziadgamal server with PM2  
 ✅ **Scalable**: Ready for high-traffic loads  
 ✅ **Monitored**: PM2 logs and process management  
 ✅ **Secure**: JWT authentication + CORS configured  
@@ -185,7 +185,7 @@ public/Customer-Support.postman_collection.json
 
 Or test the live API directly:
 ```bash
-curl https://customer-support-node.dinamo-app.com/dev/test
+curl https://customer-support-api.ziadgamal.com/dev/test
 # Returns: {"message":"OK"}
 ```
 
